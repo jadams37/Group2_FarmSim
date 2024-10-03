@@ -5,9 +5,11 @@ using UnityEngine;
 public class PlayerCamera : MonoBehaviour
 {
 
+    // Controls speed at which player controls the camera
     public float speed = 10.0f;
-    private float xInput;
-    private float yInput;
+
+    // 2D vector to store x and y input values
+    private Vector2 movement;
 
     void Start()
     {
@@ -17,11 +19,10 @@ public class PlayerCamera : MonoBehaviour
     void LateUpdate()
     {
 
-        xInput = Input.GetAxisRaw("Horizontal");
-        yInput = Input.GetAxisRaw("Vertical");
-
-        transform.Translate(Vector2.right * xInput * Time.deltaTime * speed);
-        transform.Translate(Vector2.up * yInput * Time.deltaTime * speed);
+        // Instantiates movement Vector2 as input axes of horizontal and vertical through InputManager
+        // Normalize the vector to prevent faster speed when moving diagonal
+        movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        transform.Translate(movement * Time.deltaTime * speed);
 
     }
 }
