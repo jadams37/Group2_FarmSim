@@ -7,9 +7,12 @@ using UnityEngine.EventSystems;
 public class PlayerCamera : MonoBehaviour
 {
 
+    // Pause status of game
     private bool isPaused;
 
+    // GUI container with all menus/buttons
     public PlayerUI playerUI;
+    // EventSystem for button events
     public EventSystem eventSystem;
 
     // Controls speed at which player controls the camera
@@ -17,6 +20,8 @@ public class PlayerCamera : MonoBehaviour
 
     // 2D vector to store x and y input values
     private Vector2 movement;
+
+    // Class containing Player input information and camera movement
 
     void Start()
     {
@@ -27,12 +32,6 @@ public class PlayerCamera : MonoBehaviour
     {
 
         DetermineInput();
-
-    }
-
-    void LateUpdate()
-    {
-
         MoveCamera();
 
     }
@@ -51,7 +50,14 @@ public class PlayerCamera : MonoBehaviour
     private void DetermineInput()
     {
 
-        if (Input.GetKeyDown(KeyCode.Escape) && !isPaused && !playerUI.IsInMenu())
+        MenuInput();
+
+    }
+
+    private void MenuInput()
+    {
+
+        if(Input.GetKeyDown(KeyCode.Escape) && !isPaused && !playerUI.IsInMenu())
         {
 
             Debug.Log("Pause");
@@ -59,7 +65,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if (Input.GetKeyDown(KeyCode.Escape) && isPaused && !playerUI.IsInMenu())
+        else if(Input.GetKeyDown(KeyCode.Escape) && isPaused && !playerUI.IsInMenu())
         {
 
             Debug.Log("Unpause");
@@ -67,7 +73,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if (Input.GetKeyDown(KeyCode.Escape) && !isPaused && playerUI.IsInMenu())
+        else if(Input.GetKeyDown(KeyCode.Escape) && !isPaused && playerUI.IsInMenu())
         {
 
             Debug.Log("Close Menu");
