@@ -26,7 +26,32 @@ public class PlayerCamera : MonoBehaviour
     void Update()
     {
 
-        if(Input.GetKeyDown(KeyCode.Escape) && !isPaused && !playerUI.isInMenu())
+        DetermineInput();
+
+    }
+
+    void LateUpdate()
+    {
+
+        MoveCamera();
+
+    }
+
+    private void MoveCamera()
+    {
+
+        // Instantiates movement Vector2 as input axes of horizontal and vertical through InputManager
+        // Normalize the vector to prevent faster speed when moving diagonally
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.y = Input.GetAxisRaw("Vertical");
+        transform.Translate(movement.normalized * Time.deltaTime * speed);
+
+    }
+
+    private void DetermineInput()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Escape) && !isPaused && !playerUI.IsInMenu())
         {
 
             Debug.Log("Pause");
@@ -34,7 +59,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if(Input.GetKeyDown(KeyCode.Escape) && isPaused && !playerUI.isInMenu())
+        else if (Input.GetKeyDown(KeyCode.Escape) && isPaused && !playerUI.IsInMenu())
         {
 
             Debug.Log("Unpause");
@@ -42,7 +67,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if (Input.GetKeyDown(KeyCode.Escape) && !isPaused && playerUI.isInMenu())
+        else if (Input.GetKeyDown(KeyCode.Escape) && !isPaused && playerUI.IsInMenu())
         {
 
             Debug.Log("Close Menu");
@@ -54,13 +79,54 @@ public class PlayerCamera : MonoBehaviour
 
     }
 
-    void LateUpdate()
+    public bool GetIsPaused()
     {
-
-        // Instantiates movement Vector2 as input axes of horizontal and vertical through InputManager
-        // Normalize the vector to prevent faster speed when moving diagonally
-        movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
-        transform.Translate(movement * Time.deltaTime * speed);
-
+        return isPaused;
     }
+
+    public PlayerUI GetPlayerUI()
+    {
+        return playerUI;
+    }
+
+    public EventSystem GetEventSystem()
+    {
+        return eventSystem;
+    }
+
+    public float GetSpeed()
+    {
+        return speed;
+    }
+
+    public Vector2 GetMovement()
+    {
+        return movement;
+    }
+
+    public void SetIsPaused(bool isPaused)
+    {
+        this.isPaused = isPaused;
+    }
+
+    public void SetPlayerUI(PlayerUI playerUI)
+    {
+        this.playerUI = playerUI;
+    }
+
+    public void SetEventSystem(EventSystem eventSystem)
+    {
+        this.eventSystem = eventSystem;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    public void SetMovement(Vector2 movement)
+    {
+        this.movement = movement;
+    }
+
 }

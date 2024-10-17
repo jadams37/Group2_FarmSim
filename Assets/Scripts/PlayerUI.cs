@@ -25,7 +25,7 @@ public class PlayerUI : MonoBehaviour
     }
 
     // Returns if player has a menu open
-    public bool isInMenu()
+    public bool IsInMenu()
     {
 
         if (inventoryMenu.activeInHierarchy || marketMenu.activeInHierarchy)
