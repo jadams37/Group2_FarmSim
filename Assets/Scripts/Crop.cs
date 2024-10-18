@@ -5,18 +5,34 @@ using UnityEngine;
 public class Crop : MonoBehaviour
 {
 
+    // Current crop growth state and maximum state that can
+    // be reached
     private int curState;
     private int numStates;
+
+    // How much the crop should give the player when harvested
     private int yieldCount;
+
+    // Current level of water crop has
     private int hydrationLevel;
 
+    // Item dropped from crop when harvested
+    private Item drop;
+
+    // Rate at which crop's hydration level drops
     private float decayRate;
 
+    // Name of crop
     private string name;
 
+    // Status of whether crop can be collected or not
     private bool isHarvestable;
 
-    public Crop(int curState, int numStates, int yieldCount, int hydrationLevel, float decayRate, string name, bool isHarvestable)
+    // Class containing all information related to crops and methods to
+    // be performed on said crops
+
+    public Crop(int curState, int numStates, int yieldCount, int hydrationLevel, 
+                float decayRate, string name, bool isHarvestable)
     {
 
         this.curState = 0;
@@ -33,33 +49,85 @@ public class Crop : MonoBehaviour
 
     }
 
+    // Method to water crop, increasing it's hydration level
+    public void Water()
+    {
+
+        if(hydrationLevel > 100)
+            SetHydrationLevel(100);
+
+        if(hydrationLevel != 100)
+        {
+
+            int curHydration = (int)(hydrationLevel * (1 + decayRate));
+            SetHydrationLevel(curHydration);
+
+        }
+
+        else
+            Debug.Log("Crop does not need to be watered");
+
+    }
+
+    // Method to increase crop's current growth state if minimum hydration levels
+    // are met
     public void Grow()
     {
         
         if(hydrationLevel >= 50)
             curState++;
 
-        if(curState >= numStates)
+        if(curState == numStates)
             SetIsHarvestable(true);
 
     }
 
+    // Method to reduce crop's hydration level over time
     public void Decay()
     {
 
-        int curHydration = (int)(hydrationLevel * (1 - decayRate));
-        SetHydrationLevel(curHydration);
+        if(!isHarvestable)
+        {
 
-        if(hydrationLevel == 0)
-            Destroy();
+            int curHydration = (int)(hydrationLevel * (1 - decayRate));
+            SetHydrationLevel(curHydration);
+
+        }
 
     }
 
-    public void Destroy()
+    // Method to allow crop to be harvested once it is fully grown
+    public Item Harvest()
     {
 
-        Destroy(gameObject);
+        if(isHarvestable)
+        {
 
+            Debug.Log("Crop harvested");
+            return drop;
+
+        }
+
+        else
+        {
+
+            Debug.Log("Crop not ready for harvest");
+            return null;
+
+        }
+
+    }
+
+    // Method to remove crop if hydration levels reach 0
+    public void Destroy()
+    {
+        if (hydrationLevel <= 0)
+        {
+
+            Debug.Log("Crop has died");
+            Destroy(gameObject);
+
+        }
     }
 
     public int GetCurState()
@@ -90,6 +158,11 @@ public class Crop : MonoBehaviour
     public string GetName()
     {
         return name;
+    }
+
+    public Item GetDrop()
+    {
+        return drop;
     }
 
     public bool GetIsHarvestable()
@@ -130,6 +203,11 @@ public class Crop : MonoBehaviour
     public void SetIsHarvestable(bool isHarvestable)
     {
         this.isHarvestable = isHarvestable;
+    }
+
+    public void SetDrop(Item drop)
+    {
+        this.drop = drop;
     }
 
 }

@@ -32,10 +32,10 @@ public class Plot : MonoBehaviour
 
     }
 
-    private void Harvest()
+    public void Harvest()
     {
 
-        crop.Destroy();
+        crop.Harvest();
 
     }
 

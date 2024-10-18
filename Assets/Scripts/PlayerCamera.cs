@@ -17,6 +17,7 @@ public class PlayerCamera : MonoBehaviour
 
     // GUI container with all menus & buttons
     public PlayerUI playerUI;
+
     // EventSystem for button events
     public EventSystem eventSystem;
 
@@ -25,6 +26,7 @@ public class PlayerCamera : MonoBehaviour
 
     // 2D vector to store x and y input values
     private Vector2 movement;
+
     // Class containing Player input information and camera movement
 
     void Start()
@@ -35,9 +37,7 @@ public class PlayerCamera : MonoBehaviour
     void Update()
     {
 
-        // Constantly checks for input
         DetermineInput();
-        MoveCamera();
 
     }
 
@@ -52,10 +52,12 @@ public class PlayerCamera : MonoBehaviour
 
     }
 
+    // Helper method containing all various input methods
     private void DetermineInput()
     {
 
         MenuInput();
+        MoveCamera();
 
     }
 
@@ -104,15 +106,24 @@ public class PlayerCamera : MonoBehaviour
         else if(Input.GetKeyDown(KeyCode.Escape) && !isPaused && playerUI.IsInMenu())
         {
 
-            Debug.Log("Close Menu");
-            playerUI.inventoryButton.interactable = true;
-            playerUI.marketButton.interactable = true;
-            playerUI.GetActiveMenu().SetActive(false);
+            CloseMenu();
 
         }
 
+        // Hides or shows GUI with 'H' if the game is not paused and no menu is open
         else if(Input.GetKeyDown(KeyCode.H) && !isPaused && !playerUI.IsInMenu())
             playerUI.ToggleUI();
+
+    }
+
+    // Helper method to close currently opened menu
+    private void CloseMenu()
+    {
+
+        Debug.Log("Close Menu");
+        playerUI.inventoryButton.interactable = true;
+        playerUI.marketButton.interactable = true;
+        playerUI.GetActiveMenu().SetActive(false);
 
     }
 
