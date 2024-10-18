@@ -1,16 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class PlayerCamera : MonoBehaviour
 {
 
+    // Camera class for controlling player movement and thus camera movement
+    // Manages any input from the player besides movement such as pausing/unpausing
+    // the game or closing any menus
+
     // Pause status of game
     private bool isPaused;
 
-    // GUI container with all menus/buttons
+    // GUI container with all menus & buttons
     public PlayerUI playerUI;
     // EventSystem for button events
     public EventSystem eventSystem;
@@ -20,17 +25,17 @@ public class PlayerCamera : MonoBehaviour
 
     // 2D vector to store x and y input values
     private Vector2 movement;
-
     // Class containing Player input information and camera movement
 
     void Start()
     {
-        
+
     }
 
     void Update()
     {
 
+        // Constantly checks for input
         DetermineInput();
         MoveCamera();
 
@@ -54,25 +59,48 @@ public class PlayerCamera : MonoBehaviour
 
     }
 
+    private void Pause()
+    {
+
+        // Helper method for pausing game
+        Debug.Log("Pause");
+        isPaused = true;
+        Time.timeScale = 0;
+        playerUI.pauseMenu.SetActive(true);
+
+    }
+
+    private void Unpause()
+    {
+
+        // Helper method for unpausing game
+        Debug.Log("Unpause");
+        isPaused = false;
+        Time.timeScale = 1.0f;
+        playerUI.pauseMenu.SetActive(false);
+
+    }
+
     private void MenuInput()
     {
 
+        // Pauses game if player presses 'Escape' with no menus open
         if(Input.GetKeyDown(KeyCode.Escape) && !isPaused && !playerUI.IsInMenu())
         {
 
-            Debug.Log("Pause");
-            isPaused = true;
+            Pause();
 
         }
 
+        // Unpauses game if player presses 'Escape' and the game is currently paused
         else if(Input.GetKeyDown(KeyCode.Escape) && isPaused && !playerUI.IsInMenu())
         {
 
-            Debug.Log("Unpause");
-            isPaused = false;
+            Unpause();
 
         }
 
+        // Closes any menu that is open if the player presses 'Escape'
         else if(Input.GetKeyDown(KeyCode.Escape) && !isPaused && playerUI.IsInMenu())
         {
 
@@ -82,6 +110,9 @@ public class PlayerCamera : MonoBehaviour
             playerUI.GetActiveMenu().SetActive(false);
 
         }
+
+        else if(Input.GetKeyDown(KeyCode.H) && !isPaused && !playerUI.IsInMenu())
+            playerUI.ToggleUI();
 
     }
 

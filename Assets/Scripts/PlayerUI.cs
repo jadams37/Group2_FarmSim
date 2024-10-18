@@ -6,16 +6,24 @@ using UnityEngine.UI;
 public class PlayerUI : MonoBehaviour
 {
 
+    public GameObject playerMoney;
+    public GameObject gameTime;
+
     public GameObject inventoryMenu;
     public GameObject marketMenu;
+    public GameObject pauseMenu;
 
     public Button inventoryButton;
     public Button marketButton;
 
+    private bool showUI;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
+        showUI = true;
+
     }
 
     // Update is called once per frame
@@ -24,7 +32,7 @@ public class PlayerUI : MonoBehaviour
         
     }
 
-    // Returns if player has a menu open
+    // Returns if player has a menu open, excluding the pause menu
     public bool IsInMenu()
     {
 
@@ -46,6 +54,72 @@ public class PlayerUI : MonoBehaviour
         else
             return marketMenu;
 
+    }
+
+    public void ToggleUI()
+    {
+
+        if(showUI)
+        {
+
+            showUI = false;
+            playerMoney.SetActive(false);
+            gameTime.SetActive(false);
+            inventoryButton.gameObject.SetActive(false);
+            marketButton.gameObject.SetActive(false);
+
+        }
+
+        else if(!showUI)
+        {
+
+            showUI = true;
+            playerMoney.SetActive(true);
+            gameTime.SetActive(true);
+            inventoryButton.gameObject.SetActive(true);
+            marketButton.gameObject.SetActive(true);
+
+        }
+
+    }
+
+    public GameObject GetPlayerMoney()
+    {
+        return playerMoney;
+    }
+
+    public GameObject GetGameTime()
+    {
+        return gameTime;
+    }
+
+    public GameObject GetInventoryMenu()
+    {
+        return inventoryMenu;
+    }
+
+    public GameObject GetMarketMenu()
+    {
+        return marketMenu;
+    }
+
+    public GameObject GetPauseMenu()
+    {
+        return pauseMenu;
+    }
+
+    public Button GetInventoryButton()
+    {
+        return inventoryButton;
+    }
+    public Button GetMarketButton()
+    {
+        return marketButton;
+    }
+
+    public bool GetShowUI()
+    {
+        return showUI;
     }
 
 }
