@@ -82,7 +82,7 @@ public class Seed
 
     public void Water()
     {
-        Debug.Log("Watering " + seedName + ". );
+        Debug.Log("Watering " + seedName + ".");
     }
 
    
