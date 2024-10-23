@@ -71,18 +71,18 @@ public class Seed
         if (!isPlanted)
         {
             isPlanted = true;
-            Debug.Log(seedName + " has been planted.");
+            Debug.Log(name + " has been planted.");
         }
         else
         {
-            Debug.Log(seedName + " is already planted.");
+            Debug.Log(name + " is already planted.");
         }
     }
 
 
     public void Water()
     {
-        Debug.Log("Watering " + seedName + ".");
+        Debug.Log("Watering " + name + ".");
     }
 
    

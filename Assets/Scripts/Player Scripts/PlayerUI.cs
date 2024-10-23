@@ -12,6 +12,9 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
 
     // References to all GUI elements
     public GameObject playerMoney;
+
+    public TextMeshProUGUI moneyText;
+
     public GameObject gameTime;
 
     public TextMeshProUGUI timeText;
@@ -25,6 +28,8 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
 
     private DayNightCycle timeDisplay;
 
+    private PlayerData player;
+
     // Status for GUI visibility
     private bool showUI;
 
@@ -35,6 +40,8 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
     {
 
         timeDisplay = GameObject.Find("Main Camera").GetComponent<DayNightCycle>();
+
+        player = GameObject.Find("Player").GetComponent<PlayerData>();
 
         showUI = true;
 
