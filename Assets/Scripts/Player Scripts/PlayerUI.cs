@@ -1,14 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PlayerUI : MonoBehaviour
+public class PlayerUI : MonoBehaviour, IPointerEnterHandler
 {
 
     // References to all GUI elements
     public GameObject playerMoney;
     public GameObject gameTime;
+
+    public TextMeshProUGUI timeText;
 
     public GameObject inventoryMenu;
     public GameObject marketMenu;
@@ -16,6 +22,8 @@ public class PlayerUI : MonoBehaviour
 
     public Button inventoryButton;
     public Button marketButton;
+
+    private DayNightCycle timeDisplay;
 
     // Status for GUI visibility
     private bool showUI;
@@ -26,6 +34,8 @@ public class PlayerUI : MonoBehaviour
     void Start()
     {
 
+        timeDisplay = GameObject.Find("Main Camera").GetComponent<DayNightCycle>();
+
         showUI = true;
 
     }
@@ -33,7 +43,17 @@ public class PlayerUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+        SetGameTime();
+
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+
+        if(eventData.pointerEnter.name.Contains("Button"))
+            Debug.Log(eventData.pointerEnter.name.Replace("Button", ""));
+
     }
 
     // Returns if player has a menu open, excluding the pause menu
@@ -69,6 +89,13 @@ public class PlayerUI : MonoBehaviour
 
         else if (!showUI)
             UIOn();
+
+    }
+
+    private void SetGameTime()
+    {
+
+        timeText.text = string.Format("Time: {0}:{1:00}", timeDisplay.hours, timeDisplay.mins);
 
     }
 

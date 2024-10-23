@@ -15,6 +15,8 @@ public class PlayerCamera : MonoBehaviour
     // Pause status of game
     private bool isPaused;
 
+    public GameObject gameCamera;
+
     // GUI container with all menus & buttons
     public PlayerUI playerUI;
 
@@ -24,8 +26,10 @@ public class PlayerCamera : MonoBehaviour
     // Controls speed at which player controls the camera
     public float speed = 10.0f;
 
+    private Vector3 offset = new Vector3(0, 0, -10);
+
     // 2D vector to store x and y input values
-    private Vector2 movement;
+    private Vector3 movement;
 
     // Class containing Player input information and camera movement
 
@@ -49,6 +53,8 @@ public class PlayerCamera : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
         transform.Translate(movement.normalized * Time.deltaTime * speed);
+
+        gameCamera.transform.position = transform.position + offset;
 
     }
 

@@ -23,7 +23,7 @@ public class Crop : MonoBehaviour
     private float decayRate;
 
     // Name of crop
-    private string name;
+    private string cropName;
 
     // Status of whether crop can be collected or not
     private bool isHarvestable;
@@ -32,7 +32,7 @@ public class Crop : MonoBehaviour
     // be performed on said crops
 
     public Crop(int curState, int numStates, int yieldCount, int hydrationLevel, 
-                float decayRate, string name, bool isHarvestable)
+                float decayRate, string cropName, bool isHarvestable)
     {
 
         this.curState = 0;
@@ -43,7 +43,7 @@ public class Crop : MonoBehaviour
 
         this.decayRate = 0.10f;
 
-        this.name = name;
+        this.cropName = cropName;
 
         this.isHarvestable = false;
 
@@ -157,7 +157,7 @@ public class Crop : MonoBehaviour
 
     public string GetName()
     {
-        return name;
+        return cropName;
     }
 
     public Item GetDrop()
@@ -195,9 +195,9 @@ public class Crop : MonoBehaviour
         this.decayRate = decayRate;
     }
 
-    public void SetName(string name)
+    public void SetName(string cropName)
     {
-        this.name = name;
+        this.cropName = cropName;
     }
 
     public void SetIsHarvestable(bool isHarvestable)
