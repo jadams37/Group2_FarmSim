@@ -20,6 +20,7 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
     public TextMeshProUGUI timeText;
 
     public GameObject inventoryMenu;
+    public GameObject buttonTooltip;
     public GameObject marketMenu;
     public GameObject pauseMenu;
 
@@ -58,8 +59,24 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
 
-        if(eventData.pointerEnter.name.Contains("Button"))
-            Debug.Log(eventData.pointerEnter.name.Replace("Button", ""));
+        if (eventData.pointerEnter.name.EndsWith("Button"))
+        {
+
+            string buttonName = eventData.pointerEnter.name.Replace("Button", "");
+            Debug.Log(buttonName);
+            Vector2 mousePos = eventData.position;
+            buttonTooltip.transform.position = mousePos;
+            buttonTooltip.GetComponent<TextMeshProUGUI>().SetText(buttonName);
+            buttonTooltip.SetActive(true);
+
+        }
+
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+
+        buttonTooltip.SetActive(false);
 
     }
 

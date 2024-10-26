@@ -30,7 +30,7 @@ public class InventoryData : ScriptableObject
         }
         else{
             //Get the info for the item in the list
-            ItemData oldItem = InventoryList.Find(item);
+            ItemData oldItem = item;//InventoryList.Find(item);
             //Increase the item amount
             int increment = oldItem.GetAmount();
             item.IncreaseAmount(increment);
