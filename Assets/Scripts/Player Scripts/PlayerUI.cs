@@ -20,7 +20,6 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
     public TextMeshProUGUI timeText;
 
     public GameObject inventoryMenu;
-    public GameObject buttonTooltip;
     public GameObject marketMenu;
     public GameObject pauseMenu;
 
@@ -59,24 +58,7 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
 
-        if (eventData.pointerEnter.name.EndsWith("Button"))
-        {
-
-            string buttonName = eventData.pointerEnter.name.Replace("Button", "");
-            Debug.Log(buttonName);
-            Vector2 mousePos = eventData.position;
-            buttonTooltip.transform.position = mousePos;
-            buttonTooltip.GetComponent<TextMeshProUGUI>().SetText(buttonName);
-            buttonTooltip.SetActive(true);
-
-        }
-
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-
-        buttonTooltip.SetActive(false);
+        // Might come in handy in the future
 
     }
 
@@ -108,10 +90,10 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
     public void ToggleUI()
     {
 
-        if (showUI)
+        if(showUI)
             UIOff();
 
-        else if (!showUI)
+        else if(!showUI)
             UIOn();
 
     }
@@ -119,7 +101,25 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
     private void SetGameTime()
     {
 
-        timeText.text = string.Format("Time: {0}:{1:00}", timeDisplay.hours, timeDisplay.mins);
+        int hours = timeDisplay.hours;
+        int mins = timeDisplay.mins;
+
+        string[] timeOfDays = {"AM", "PM"};
+        string timeOfDay = timeOfDays[0];
+
+        if (timeDisplay.hours > 11 && timeDisplay.hours != 12)
+        {
+            hours = timeDisplay.hours - 12;
+            timeOfDay = timeOfDays[1];
+        }
+
+        else if (timeDisplay.hours == 12)
+            timeOfDay = timeOfDays[1];
+
+        else
+            timeOfDay = timeOfDays[0];
+
+        timeText.text = string.Format("Time: {0}:{1:00} {2}", hours, mins, timeOfDay);
 
     }
 

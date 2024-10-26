@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerData : MonoBehaviour
 {
+
+    private int moneyAmount;
+
     // Start is called before the first frame update
     void Start()
     {

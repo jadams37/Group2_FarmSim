@@ -58,7 +58,7 @@ public class DayNightCycle : MonoBehaviour
         if(hours >= 24)
         {
 
-            hours = 0;
+            hours = 1;
             days += 1;
 
         }
