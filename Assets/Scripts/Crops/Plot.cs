@@ -12,12 +12,29 @@ public class Plot : MonoBehaviour
 
     private Crop crop;
 
-    public Plot(int curState, int numStates, bool isCultivable)
+    private SpriteRenderer sprite;
+
+    /*public Plot(int curState, int numStates, bool isCultivable, Crop crop)
     {
 
         this.curState = 0;
         this.numStates = numStates;
         this.isCultivable = isCultivable;
+        this.crop = null;
+
+    }*/
+
+    void Start()
+    {
+
+        isCultivable = true;
+
+        curState = 0;
+        numStates = 2;
+
+        sprite = GetComponent<SpriteRenderer>();
+
+        sprite.color = new Color(255, 0, 0);
 
     }
 
@@ -27,7 +44,7 @@ public class Plot : MonoBehaviour
         if(isCultivable && curState == 0)
             Cultivate();
 
-        if (crop.GetIsHarvestable() && curState == 1)
+        if(crop != null && crop.GetIsHarvestable()  && curState == 1)
             Harvest();
 
     }
@@ -41,7 +58,11 @@ public class Plot : MonoBehaviour
 
     private void Cultivate()
     {
-        SetCurState(1);
+
+        Debug.Log("Plot cultivated");
+        curState = 1;
+        sprite.color = new Color(0, 255, 0);
+
     }
 
     public int GetCurState()

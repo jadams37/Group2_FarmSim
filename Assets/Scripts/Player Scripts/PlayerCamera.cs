@@ -23,6 +23,8 @@ public class PlayerCamera : MonoBehaviour
     // EventSystem for button events
     public EventSystem eventSystem;
 
+    public GameObject map;
+
     // Controls speed at which player controls the camera
     public float speed = 10.0f;
 
@@ -35,6 +37,10 @@ public class PlayerCamera : MonoBehaviour
 
     void Start()
     {
+
+        Map gameMap = map.GetComponent<Map>();
+
+        transform.position = gameMap.GetCenter();
 
     }
 
