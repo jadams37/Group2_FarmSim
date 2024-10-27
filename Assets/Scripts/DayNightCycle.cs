@@ -11,11 +11,18 @@ public class DayNightCycle : MonoBehaviour
     public float tick;
     public float seconds;
     public int mins;
-    public int hours = 7;
-    public int days = 1;
+    public int hours;
+    public int days;
 
     void Start()
     {
+
+        // Default
+        tick = 60.0f;
+        hours = 7;
+        days = 1;
+
+        // Load time stats from save here
 
     }
 
