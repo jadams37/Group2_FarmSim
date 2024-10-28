@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Plot : MonoBehaviour
@@ -11,6 +12,8 @@ public class Plot : MonoBehaviour
     private bool isCultivable;
 
     private Crop crop;
+
+    private GameObject cropObject;
 
     private SpriteRenderer sprite;
 
@@ -36,6 +39,8 @@ public class Plot : MonoBehaviour
 
         sprite.color = new Color(255, 0, 0);
 
+        cropObject = GameObject.Find("Crop");
+
     }
 
     private void OnMouseDown()
@@ -49,10 +54,26 @@ public class Plot : MonoBehaviour
 
     }
 
+    private void OnMouseOver()
+    {
+
+        if(Input.GetMouseButtonDown(1) && curState == 1 && crop == null)
+        {
+
+            Debug.Log("Crop planted");
+            Instantiate(cropObject, transform.position, transform.rotation, transform);
+            crop = cropObject.GetComponent<Crop>();
+
+        }
+
+    }
+
     public void Harvest()
     {
 
         crop.Harvest();
+        Destroy(transform.GetChild(0).gameObject);
+        crop = null;
 
     }
 
