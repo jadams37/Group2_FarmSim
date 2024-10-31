@@ -7,6 +7,8 @@ public class PlayerData : MonoBehaviour
 
     private int moneyAmount;
 
+    private Item[] itemsSoldForDay;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,4 +20,15 @@ public class PlayerData : MonoBehaviour
     {
         
     }
+
+    public Item[] GetItemsSoldForDay()
+    {
+        return itemsSoldForDay;
+    }
+
+    public void SetItemsSoldForDay(Item[] itemsSoldForDay)
+    {
+        this.itemsSoldForDay = itemsSoldForDay;
+    }
+
 }
