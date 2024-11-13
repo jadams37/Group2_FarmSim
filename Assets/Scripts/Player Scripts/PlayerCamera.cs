@@ -27,8 +27,9 @@ public class PlayerCamera : MonoBehaviour
     public GameObject map;
 
     // Controls speed at which player controls the camera
-    private float speed = 10.0f;
-    private float speedMultiplier = 2;
+    private float minSpeed = 10.0f;
+    private float speed;
+    private float maxSpeed = 20.0f;
 
     private Vector3 offset = new Vector3(0, 0, -10);
 
@@ -54,6 +55,8 @@ public class PlayerCamera : MonoBehaviour
         camera = gameCamera.GetComponent<Camera>();
 
         zoom = camera.orthographicSize;
+
+        speed = minSpeed;
 
     }
 
@@ -82,9 +85,10 @@ public class PlayerCamera : MonoBehaviour
         camera.orthographicSize = Mathf.SmoothDamp(camera.orthographicSize, zoom, ref velocity, smoothTime);
 
         if(Input.GetKeyDown(KeyCode.LeftShift))
-            speed *= speedMultiplier;
+            speed = maxSpeed;
 
-        speed = 10f;
+        if(Input.GetKeyUp(KeyCode.LeftShift))
+            speed = minSpeed;
 
     }
 
