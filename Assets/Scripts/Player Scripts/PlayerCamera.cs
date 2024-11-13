@@ -108,6 +108,10 @@ public class PlayerCamera : MonoBehaviour
         Debug.Log("Pause");
         isPaused = true;
         Time.timeScale = 0;
+
+        if(playerUI.GetShowUI())
+            playerUI.ToggleUI();
+
         playerUI.pauseMenu.SetActive(true);
 
     }
@@ -119,6 +123,7 @@ public class PlayerCamera : MonoBehaviour
         Debug.Log("Unpause");
         isPaused = false;
         Time.timeScale = 1.0f;
+        playerUI.ToggleUI();
         playerUI.pauseMenu.SetActive(false);
 
     }
