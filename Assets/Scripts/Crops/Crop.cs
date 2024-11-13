@@ -8,22 +8,22 @@ public class Crop : MonoBehaviour
 
     // Current crop growth state and maximum state that can
     // be reached
-    private int curState;
+    private int curState = 0;
     private int numStates;
 
     // How much the crop should give the player when harvested
-    private int yieldCount;
+    public int yieldCount;
 
     // Current level of water crop has
-    private int hydrationLevel;
+    private int hydrationLevel = 50;
 
-    private int growthRate = 10;
+    public int growthRate;
 
     // Item dropped from crop when harvested
-    private Item drop;
+    public Item drop;
 
     // Rate at which crop's hydration level drops
-    private float decayRate;
+    private float decayRate = 0.10f;
 
     // Name of crop
     private string cropName;
@@ -38,30 +38,24 @@ public class Crop : MonoBehaviour
     // Class containing all information related to crops and methods to
     // be performed on said crops
 
-    /*public Crop(int curState, int numStates, int yieldCount, int hydrationLevel, 
-                float decayRate, string cropName, bool isHarvestable)
+    /*public Crop(string cropName, int numStates, int yieldCount)
     {
 
-        this.curState = 0;
         this.numStates = numStates;
 
         this.yieldCount = yieldCount;
-        this.hydrationLevel = 50;
-
-        this.decayRate = 0.10f;
 
         this.cropName = cropName;
-
-        this.isHarvestable = false;
 
     }*/
 
     void Start()
     {
 
-        curState = 0;
-        hydrationLevel = 50;
-        numStates = spriteStates.Length - 1;
+        //curState = 0;
+        //hydrationLevel = 50;
+        numStates = spriteStates.Length;
+        isHarvestable = false;
         spriteRenderer = GetComponent<SpriteRenderer>();
         SetSprite();
 
@@ -82,7 +76,7 @@ public class Crop : MonoBehaviour
         while(true)
         {
 
-            yield return new WaitForSeconds(growthRate);
+            yield return new WaitForSeconds(growthRate * 100);
             Grow();
             SetSprite();
 
@@ -129,11 +123,11 @@ public class Crop : MonoBehaviour
 
         }
 
-        if(curState >= numStates)
+        if(curState >= numStates - 1)
         {
 
             SetIsHarvestable(true);
-            curState = numStates;
+            curState = numStates - 1;
 
         }
 
@@ -178,7 +172,7 @@ public class Crop : MonoBehaviour
     // Method to remove crop if hydration levels reach 0
     public void Destroy()
     {
-        if (hydrationLevel <= 0)
+        if(hydrationLevel <= 0)
         {
 
             Debug.Log("Crop has died");

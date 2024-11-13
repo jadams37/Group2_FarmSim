@@ -12,6 +12,11 @@ public class MarketMath
     public const int VALUE_INC = 1;
     public const int VALUE_DEC = 2;
 
+    public MarketMath()
+    {
+
+    }
+
     public Item CalculateItemDiscount(Item item, bool isDiscounted)
     {
 

@@ -1,21 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class Plot : MonoBehaviour
 {
 
-    private int curState;
+    public int curState;
     private int numStates;
 
     private bool isCultivable;
 
-    private Crop crop;
+    public Crop crop;
 
-    private GameObject cropObject;
+    public GameObject cropObject;
 
     private SpriteRenderer sprite;
+
+    public GameObject[] cropObjects;
 
     /*public Plot(int curState, int numStates, bool isCultivable, Crop crop)
     {
@@ -39,12 +43,28 @@ public class Plot : MonoBehaviour
 
         sprite.color = new Color(255, 0, 0);
 
-        cropObject = GameObject.Find("Crop");
+        cropObject = cropObjects[1];
+
+    }
+
+    void Update()
+    {
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if(other.gameObject.CompareTag("Debris"))
+            isCultivable = false;
 
     }
 
     private void OnMouseDown()
     {
+
+        if(Time.timeScale == 0)
+            return;
 
         if(isCultivable && curState == 0)
             Cultivate();
@@ -57,11 +77,14 @@ public class Plot : MonoBehaviour
     private void OnMouseOver()
     {
 
-        if(Input.GetMouseButtonDown(1) && curState == 1 && crop == null)
+        if(Input.GetMouseButtonDown(1) && curState == 1 && crop == null && Time.timeScale != 0)
         {
 
             Debug.Log("Crop planted");
-            Instantiate(cropObject, transform.position, transform.rotation, transform);
+            cropObject = PrefabUtility.InstantiatePrefab(cropObject) as GameObject;
+            cropObject.transform.position = transform.position;
+            cropObject.transform.rotation = transform.rotation;
+            cropObject.transform.parent = transform;
             crop = cropObject.GetComponent<Crop>();
 
         }
