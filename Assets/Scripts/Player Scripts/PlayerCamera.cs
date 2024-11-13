@@ -16,6 +16,7 @@ public class PlayerCamera : MonoBehaviour
     private bool isPaused;
 
     public GameObject gameCamera;
+    private Camera camera;
 
     // GUI container with all menus & buttons
     public PlayerUI playerUI;
@@ -26,12 +27,20 @@ public class PlayerCamera : MonoBehaviour
     public GameObject map;
 
     // Controls speed at which player controls the camera
-    public float speed = 10.0f;
+    private float speed = 10.0f;
+    private float speedMultiplier = 2;
 
     private Vector3 offset = new Vector3(0, 0, -10);
 
     // 2D vector to store x and y input values
     private Vector3 movement;
+
+    private float zoom;
+    private float zoomMultiplier = 4f;
+    private float minZoom = 5f;
+    private float maxZoom = 10f;
+    private float velocity = 0f;
+    private float smoothTime = 0.25f;
 
     // Class containing Player input information and camera movement
 
@@ -41,6 +50,10 @@ public class PlayerCamera : MonoBehaviour
         Map gameMap = map.GetComponent<Map>();
 
         transform.position = gameMap.GetCenter();
+
+        camera = gameCamera.GetComponent<Camera>();
+
+        zoom = camera.orthographicSize;
 
     }
 
@@ -58,9 +71,20 @@ public class PlayerCamera : MonoBehaviour
         // Normalize the vector to prevent faster speed when moving diagonally
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
-        transform.Translate(movement.normalized * Time.deltaTime * speed);
 
+        transform.Translate(movement.normalized * Time.deltaTime * speed);
         gameCamera.transform.position = transform.position + offset;
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        zoom -= scroll * zoomMultiplier;
+        zoom = Mathf.Clamp(zoom, minZoom, maxZoom);
+
+        camera.orthographicSize = Mathf.SmoothDamp(camera.orthographicSize, zoom, ref velocity, smoothTime);
+
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+            speed *= speedMultiplier;
+
+        speed = 10f;
 
     }
 
