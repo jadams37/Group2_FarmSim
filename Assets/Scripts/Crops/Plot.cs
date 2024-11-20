@@ -11,7 +11,7 @@ public class Plot : MonoBehaviour
     public int curState;
     private int numStates;
 
-    private bool isCultivable;
+    public bool isCultivable;
 
     public Crop crop;
 
@@ -68,6 +68,9 @@ public class Plot : MonoBehaviour
 
         if(isCultivable && curState == 0)
             Cultivate();
+
+        if(!isCultivable)
+            Debug.Log("Plot not unlocked.");
 
         if(crop != null && crop.GetIsHarvestable()  && curState == 1)
             Harvest();

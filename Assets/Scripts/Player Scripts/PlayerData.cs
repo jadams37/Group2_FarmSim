@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerData : MonoBehaviour
 {
 
-    private int moneyAmount;
+    private int moneyAmount = 0;
 
     private Item[] itemsSoldForDay;
 
@@ -23,9 +23,19 @@ public class PlayerData : MonoBehaviour
         
     }
 
+    public int getMoneyAmount()
+    {
+        return moneyAmount;
+    }
+
     public Item[] GetItemsSoldForDay()
     {
         return itemsSoldForDay;
+    }
+
+    public void setMoneyAmount(int moneyAmount)
+    {
+        this.moneyAmount = moneyAmount;
     }
 
     public void SetItemsSoldForDay(Item[] itemsSoldForDay)

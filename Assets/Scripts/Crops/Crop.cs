@@ -73,7 +73,7 @@ public class Crop : MonoBehaviour
     IEnumerator InitCrop()
     {
 
-        while(true)
+        while(!isHarvestable)
         {
 
             yield return new WaitForSeconds(growthRate * 100);

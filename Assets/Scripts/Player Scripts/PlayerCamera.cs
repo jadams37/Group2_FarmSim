@@ -26,6 +26,8 @@ public class PlayerCamera : MonoBehaviour
 
     public GameObject map;
 
+    public Map gameMap;
+
     // Controls speed at which player controls the camera
     private float minSpeed = 10.0f;
     private float speed;
@@ -48,7 +50,7 @@ public class PlayerCamera : MonoBehaviour
     void Start()
     {
 
-        Map gameMap = map.GetComponent<Map>();
+        gameMap = map.GetComponent<Map>();
 
         transform.position = gameMap.GetCenter();
 
@@ -72,8 +74,11 @@ public class PlayerCamera : MonoBehaviour
 
         // Instantiates movement Vector2 as input axes of horizontal and vertical through InputManager
         // Normalize the vector to prevent faster speed when moving diagonally
+
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
+
+        ConstrainCamera();
 
         transform.Translate(movement.normalized * Time.deltaTime * speed);
         gameCamera.transform.position = transform.position + offset;
@@ -89,6 +94,23 @@ public class PlayerCamera : MonoBehaviour
 
         if(Input.GetKeyUp(KeyCode.LeftShift))
             speed = minSpeed;
+
+    }
+
+    private void ConstrainCamera()
+    {
+
+        if(movement.x < 0 && transform.position.x <= gameMap.xBounds[0])
+            movement.x = 0;
+
+        if(movement.x > 0 && transform.position.x >= gameMap.xBounds[1])
+            movement.x = 0;
+
+        if(movement.y < 0 && transform.position.y <= gameMap.yBounds[0])
+            movement.y = 0;
+
+        if(movement.y > 0 && transform.position.y >= gameMap.yBounds[1])
+            movement.y = 0;
 
     }
 

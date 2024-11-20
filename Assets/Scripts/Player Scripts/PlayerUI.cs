@@ -52,6 +52,7 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
     {
 
         SetGameTime();
+        SetPlayerMoney();
 
     }
 
@@ -95,6 +96,13 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
 
         else if(!showUI)
             UIOn();
+
+    }
+
+    private void SetPlayerMoney()
+    {
+
+        moneyText.text = string.Format("Money: ${0}", player.getMoneyAmount());
 
     }
 
