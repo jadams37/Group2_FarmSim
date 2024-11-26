@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4224771850219403463}
   - component: {fileID: 5507217752884267151}
   m_Layer: 0
-  m_Name: Carrot
+  m_Name: Watermelon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 1748133176, guid: 333739b2c6425534fb58adf2e9628700, type: 3}
+  m_Sprite: {fileID: -1633703558, guid: 599bd6f8e69e1bd47ac29df7860c3c71, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,10 +98,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   yieldCount: 0
-  growthRate: 5
+  growthRate: 10
   drop: {fileID: 0}
   spriteStates:
-  - {fileID: 1748133176, guid: 333739b2c6425534fb58adf2e9628700, type: 3}
-  - {fileID: 1250416660, guid: 333739b2c6425534fb58adf2e9628700, type: 3}
-  - {fileID: -1634815250, guid: 333739b2c6425534fb58adf2e9628700, type: 3}
-  - {fileID: 627984644, guid: 333739b2c6425534fb58adf2e9628700, type: 3}
+  - {fileID: -1633703558, guid: 599bd6f8e69e1bd47ac29df7860c3c71, type: 3}
+  - {fileID: -1518476410, guid: 599bd6f8e69e1bd47ac29df7860c3c71, type: 3}
+  - {fileID: 2017576250, guid: 599bd6f8e69e1bd47ac29df7860c3c71, type: 3}
+  - {fileID: 1374549010, guid: 599bd6f8e69e1bd47ac29df7860c3c71, type: 3}
+  - {fileID: 1024067894, guid: 599bd6f8e69e1bd47ac29df7860c3c71, type: 3}

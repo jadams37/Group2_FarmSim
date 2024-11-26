@@ -1,3 +1,4 @@
+using Microsoft.Unity.VisualStudio.Editor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,12 +15,15 @@ public class PlayerCamera : MonoBehaviour
 
     // Pause status of game
     private bool isPaused;
+    private bool fastForward;
 
     public GameObject gameCamera;
     private Camera camera;
 
     // GUI container with all menus & buttons
     public PlayerUI playerUI;
+
+    private PlayerData playerData;
 
     // EventSystem for button events
     public EventSystem eventSystem;
@@ -29,9 +33,9 @@ public class PlayerCamera : MonoBehaviour
     public Map gameMap;
 
     // Controls speed at which player controls the camera
-    private float minSpeed = 10.0f;
+    private float minSpeed = 1.0f;
     private float speed;
-    private float maxSpeed = 20.0f;
+    private float maxSpeed = 2.0f;
 
     private Vector3 offset = new Vector3(0, 0, -10);
 
@@ -60,6 +64,8 @@ public class PlayerCamera : MonoBehaviour
 
         speed = minSpeed;
 
+        playerData = transform.GetComponent<PlayerData>();
+
     }
 
     void Update()
@@ -80,7 +86,7 @@ public class PlayerCamera : MonoBehaviour
 
         ConstrainCamera();
 
-        transform.Translate(movement.normalized * Time.deltaTime * speed);
+        transform.Translate(movement.normalized * Time.fixedDeltaTime * speed);
         gameCamera.transform.position = transform.position + offset;
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
@@ -120,6 +126,85 @@ public class PlayerCamera : MonoBehaviour
 
         MenuInput();
         MoveCamera();
+        EquipTool();
+        SetTimeSpeed();
+
+    }
+
+    private void EquipTool()
+    {
+
+        if(Input.GetKeyDown(KeyCode.Alpha1) && !playerData.GetHasToolEquipped())
+        {
+
+            playerData.SetToolEquipped(playerData.tools[0]);
+            playerData.SetHasToolEquipped(true);
+            playerUI.ToolIcon.GetComponent<UnityEngine.UI.Image>().sprite = playerUI.toolIcons[0];
+
+        }
+
+        else if(Input.GetKeyDown(KeyCode.Alpha1) && playerData.GetHasToolEquipped() && transform.GetChild(0).gameObject.activeInHierarchy)
+        {
+
+            playerData.SetHasToolEquipped(false);
+            playerData.SetToolEquipped(null);
+
+        }
+
+        else if(Input.GetKeyDown(KeyCode.Alpha2) && !playerData.GetHasToolEquipped())
+        {
+
+            playerData.SetToolEquipped(playerData.tools[1]);
+            playerData.SetHasToolEquipped(true);
+            playerUI.ToolIcon.GetComponent<UnityEngine.UI.Image>().sprite = playerUI.toolIcons[1];
+
+        }
+
+        else if(Input.GetKeyDown(KeyCode.Alpha2) && playerData.GetHasToolEquipped() && transform.GetChild(1).gameObject.activeInHierarchy)
+        {
+
+            playerData.SetToolEquipped(null);
+            playerData.SetHasToolEquipped(false);
+
+        }
+
+        else if(Input.GetKeyDown(KeyCode.Alpha3) && !playerData.GetHasToolEquipped())
+        {
+
+            playerData.SetToolEquipped(playerData.tools[2]);
+            playerData.SetHasToolEquipped(true);
+            playerUI.ToolIcon.GetComponent<UnityEngine.UI.Image>().sprite = playerUI.toolIcons[2];
+
+        }
+
+        else if(Input.GetKeyDown(KeyCode.Alpha3) && playerData.GetHasToolEquipped() && transform.GetChild(2).gameObject.activeInHierarchy)
+        {
+
+            playerData.SetToolEquipped(null);
+            playerData.SetHasToolEquipped(false);
+
+        }
+
+    }
+
+    private void SetTimeSpeed()
+    {
+
+        if(Input.GetKeyDown(KeyCode.F) && !fastForward)
+        {
+
+            fastForward = true;
+            Time.timeScale = 100.0f;
+
+        }
+
+        else if(Input.GetKeyDown(KeyCode.F) && fastForward)
+        {
+
+            fastForward = false;
+            Time.timeScale = 1;
+
+        }
 
     }
 

@@ -15,7 +15,7 @@ public class Crop : MonoBehaviour
     public int yieldCount;
 
     // Current level of water crop has
-    private int hydrationLevel = 50;
+    public int hydrationLevel = 50;
 
     public int growthRate;
 
@@ -92,7 +92,7 @@ public class Crop : MonoBehaviour
     }
 
     // Method to water crop, increasing it's hydration level
-    public void Water()
+    public void Water(int waterAmount)
     {
 
         if(hydrationLevel > 100)

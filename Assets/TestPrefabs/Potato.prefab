@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4224771850219403463}
   - component: {fileID: 5507217752884267151}
   m_Layer: 0
-  m_Name: Carrot
+  m_Name: Potato
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 1748133176, guid: 333739b2c6425534fb58adf2e9628700, type: 3}
+  m_Sprite: {fileID: 1940535647, guid: 8e46a2bc44626b0448bf1a1d97b44b16, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,10 +98,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   yieldCount: 0
-  growthRate: 5
+  growthRate: 6
   drop: {fileID: 0}
   spriteStates:
-  - {fileID: 1748133176, guid: 333739b2c6425534fb58adf2e9628700, type: 3}
-  - {fileID: 1250416660, guid: 333739b2c6425534fb58adf2e9628700, type: 3}
-  - {fileID: -1634815250, guid: 333739b2c6425534fb58adf2e9628700, type: 3}
-  - {fileID: 627984644, guid: 333739b2c6425534fb58adf2e9628700, type: 3}
+  - {fileID: 1940535647, guid: 8e46a2bc44626b0448bf1a1d97b44b16, type: 3}
+  - {fileID: 1977154102, guid: 8e46a2bc44626b0448bf1a1d97b44b16, type: 3}
+  - {fileID: -1478896460, guid: 8e46a2bc44626b0448bf1a1d97b44b16, type: 3}
+  - {fileID: 541294775, guid: 8e46a2bc44626b0448bf1a1d97b44b16, type: 3}
+  - {fileID: 645852261, guid: 8e46a2bc44626b0448bf1a1d97b44b16, type: 3}

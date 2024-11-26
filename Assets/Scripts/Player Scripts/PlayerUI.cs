@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PlayerUI : MonoBehaviour, IPointerEnterHandler
+public class PlayerUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 
     // References to all GUI elements
@@ -26,12 +26,18 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
     public Button inventoryButton;
     public Button marketButton;
 
+    public GameObject ToolIcon;
+
+    public Sprite[] toolIcons;
+
     private DayNightCycle timeDisplay;
 
     private PlayerData player;
 
     // Status for GUI visibility
     private bool showUI;
+
+    private bool cursorOnUI;
 
     // Class containing all GUI element references and methods for functionality
 
@@ -53,13 +59,21 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
 
         SetGameTime();
         SetPlayerMoney();
+        ShowToolIcon();
 
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
 
-        // Might come in handy in the future
+        if(eventData.pointerEnter.gameObject.layer == 5)
+            cursorOnUI = true;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+
+        cursorOnUI = false;
 
     }
 
@@ -67,7 +81,18 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
     public bool IsInMenu()
     {
 
-        if (inventoryMenu.activeInHierarchy || marketMenu.activeInHierarchy)
+        if(inventoryMenu.activeInHierarchy || marketMenu.activeInHierarchy)
+            return true;
+
+        else
+            return false;
+
+    }
+
+    public bool isInPauseMenu()
+    {
+
+        if(pauseMenu.activeInHierarchy)
             return true;
 
         else
@@ -96,6 +121,28 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
 
         else if(!showUI)
             UIOn();
+
+    }
+
+    private void ShowToolIcon()
+    {
+
+        if(player.GetHasToolEquipped() && !(IsInMenu() || isInPauseMenu()))
+        {
+
+            ToolIcon.SetActive(true);
+            ToolIcon.transform.position = Input.mousePosition;
+            Cursor.visible = false;
+
+        }
+
+        else
+        {
+
+            ToolIcon.SetActive(false);
+            Cursor.visible = true;
+
+        }
 
     }
 
@@ -194,6 +241,11 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
         return showUI;
     }
 
+    public bool GetCursorOnUI()
+    {
+        return cursorOnUI;
+    }
+
     public void SetPlayerMoney(GameObject playerMoney)
     {
         this.playerMoney = playerMoney;
@@ -231,6 +283,11 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler
     public void SetShowUI(bool showUI)
     {
         this.showUI = showUI;
+    }
+
+    public void SetCursorOnUI(bool cursorOnUI)
+    {
+        this.cursorOnUI = cursorOnUI;
     }
 
 }

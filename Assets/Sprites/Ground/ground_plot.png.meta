@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 333739b2c6425534fb58adf2e9628700
+guid: 9ee9b3f144bd0464f9aec43a28499e95
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: crop_carrot_0
+      name: ground_plot_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,14 +124,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6b3214de4a3ffc846813fb4bc723ef56
-      internalID: 1748133176
+      spriteID: 218d3050ef3a6e04787e64024748ea9f
+      internalID: 1724716883
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: crop_carrot_1
+      name: ground_plot_1
       rect:
         serializedVersion: 2
         x: 32
@@ -145,14 +145,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2f25c8eac6349d34fb1f0c08986a974f
-      internalID: 1250416660
+      spriteID: bb96367be86917145bd96a84ef26ef06
+      internalID: -772219370
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: crop_carrot_2
+      name: ground_plot_2
       rect:
         serializedVersion: 2
         x: 64
@@ -166,14 +166,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 118815ad9850f2149882d80a784353b8
-      internalID: -1634815250
+      spriteID: 197f3261069dd3c4a8f5bbab1ab98f6f
+      internalID: 1942718550
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: crop_carrot_3
+      name: ground_plot_3
       rect:
         serializedVersion: 2
         x: 96
@@ -187,8 +187,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d890253cc1446c44aaf1e121bd8c352f
-      internalID: 627984644
+      spriteID: c3fecd2575eafa048bb7af0bbbc4c0ee
+      internalID: 634811968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ground_plot_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 455282d222119474abadf851ec97bf6c
+      internalID: 849679946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ground_plot_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f6b638a01d09bf94784fccc4753c8b76
+      internalID: -1666792258
       vertices: []
       indices: 
       edges: []
@@ -204,10 +246,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      crop_carrot_0: 1748133176
-      crop_carrot_1: 1250416660
-      crop_carrot_2: -1634815250
-      crop_carrot_3: 627984644
+      ground_plot_0: 1724716883
+      ground_plot_1: -772219370
+      ground_plot_2: 1942718550
+      ground_plot_3: 634811968
+      ground_plot_4: 849679946
+      ground_plot_5: -1666792258
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

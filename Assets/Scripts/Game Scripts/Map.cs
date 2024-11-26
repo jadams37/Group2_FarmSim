@@ -34,7 +34,21 @@ public class Map : MonoBehaviour
     void Update()
     {
 
-        LockPlots();
+
+
+    }
+
+    private void UnlockPlots()
+    {
+
+        for (int curPlot = 0; curPlot < transform.childCount; curPlot++)
+        {
+
+            GameObject plot = transform.GetChild(curPlot).gameObject;
+            if(plot.transform.position.x <= xBounds[1] || plot.transform.position.y <= yBounds[1])
+                plot.GetComponent<Plot>().SetIsCultivable(true);
+
+        }
 
     }
 
