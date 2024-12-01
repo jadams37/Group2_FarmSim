@@ -35,6 +35,8 @@ public class Crop : MonoBehaviour
 
     public Sprite[] spriteStates;
 
+    public bool isDecaying = false;
+
     // Class containing all information related to crops and methods to
     // be performed on said crops
 
@@ -52,42 +54,36 @@ public class Crop : MonoBehaviour
     void Start()
     {
 
-        //curState = 0;
-        //hydrationLevel = 50;
         numStates = spriteStates.Length;
         isHarvestable = false;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        SetSprite();
+        spriteRenderer.sprite = spriteStates[curState];
 
-        StartCoroutine(InitCrop());
+        InitCrop();
 
     }
 
     void Update()
     {
 
-        
+        CheckHydration();
+        Destroy();
 
     }
 
-    IEnumerator InitCrop()
+    private void CheckHydration()
     {
 
-        while(!isHarvestable)
-        {
-
-            yield return new WaitForSeconds(growthRate * 100);
-            Grow();
-            SetSprite();
-
-        }
+        if(hydrationLevel > 25)
+            isDecaying = false;
 
     }
-
-    private void SetSprite()
+    
+    private void InitCrop()
     {
 
-        spriteRenderer.sprite = spriteStates[curState];
+        StartCoroutine(Grow());
+        StartCoroutine(Decay());
 
     }
 
@@ -95,55 +91,71 @@ public class Crop : MonoBehaviour
     public void Water(int waterAmount)
     {
 
-        if(hydrationLevel > 100)
-            SetHydrationLevel(100);
-
-        if(hydrationLevel != 100)
-        {
-
-            int curHydration = (int)(hydrationLevel * (1 + decayRate));
-            SetHydrationLevel(curHydration);
-
-        }
+        if (hydrationLevel < 100)
+            hydrationLevel += waterAmount;
 
         else
+        {
+
+            hydrationLevel = 100;
             Debug.Log("Crop does not need to be watered");
+
+        }
 
     }
 
     // Method to increase crop's current growth state if minimum hydration levels
     // are met
-    public void Grow()
+    private IEnumerator Grow()
     {
 
-        if(hydrationLevel >= 50)
+        while(!isHarvestable)
         {
 
-            curState++;
+            yield return new WaitForSeconds(growthRate * 100);
+            if(!isDecaying)
+            {
+
+                curState++;
+                spriteRenderer.sprite = spriteStates[curState];
+
+            }
+
+            if(curState >= numStates - 1)
+            {
+
+                SetIsHarvestable(true);
+                curState = numStates - 1;
+                spriteRenderer.sprite = spriteStates[curState];
+
+            }
 
         }
 
-        if(curState >= numStates - 1)
-        {
-
-            SetIsHarvestable(true);
-            curState = numStates - 1;
-
-        }
+        StopCoroutine(Grow());
 
     }
 
     // Method to reduce crop's hydration level over time
-    public void Decay()
+    private IEnumerator Decay()
     {
 
-        if(hydrationLevel < 50 && !isHarvestable)
+        while(!isHarvestable)
         {
 
-            int curHydration = (int)(hydrationLevel * (1 - decayRate));
-            SetHydrationLevel(curHydration);
+            yield return new WaitForSeconds((growthRate * 100) / 4);
+            hydrationLevel = (int)(hydrationLevel * (1 - decayRate));
+
+            if(hydrationLevel < 25)
+            {
+
+                isDecaying = true;
+
+            }
 
         }
+
+        StopCoroutine(Decay());
 
     }
 
@@ -172,6 +184,7 @@ public class Crop : MonoBehaviour
     // Method to remove crop if hydration levels reach 0
     public void Destroy()
     {
+
         if(hydrationLevel <= 0)
         {
 
@@ -179,9 +192,6 @@ public class Crop : MonoBehaviour
             Destroy(gameObject);
 
         }
-
-        else
-            Destroy(gameObject);
 
     }
 

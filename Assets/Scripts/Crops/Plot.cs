@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Plot : MonoBehaviour
 {
@@ -26,6 +27,10 @@ public class Plot : MonoBehaviour
     private PlayerData player;
 
     public Sprite[] spriteStates;
+
+    private GameObject waterIcon;
+
+    public bool isHighlighted = false;
 
     /*public Plot(int curState, int numStates, bool isCultivable, Crop crop)
     {
@@ -55,10 +60,18 @@ public class Plot : MonoBehaviour
 
         player = GameObject.Find("Player").GetComponent<PlayerData>();
 
+        waterIcon = transform.GetChild(0).gameObject;
+
     }
 
     void Update()
     {
+
+        if(crop != null && crop.isDecaying)
+            waterIcon.SetActive(true);
+
+        else
+            waterIcon.SetActive(false);
 
     }
 
@@ -97,7 +110,7 @@ public class Plot : MonoBehaviour
         if(crop != null && crop.GetHydrationLevel() < 100 && player.GetToolEquipped() != null && player.GetToolEquipped().toolIndex == 0)
             player.GetToolEquipped().UseTool(transform.GetComponent<Plot>());
 
-        if(crop != null && crop.GetIsHarvestable()  && curState == 3)
+        if(crop != null && crop.GetIsHarvestable()  && curState == 3 && !player.GetHasToolEquipped())
             Harvest();
 
         if(curState > 3 && player.GetToolEquipped() != null && player.GetToolEquipped().toolIndex == 2)
@@ -108,7 +121,10 @@ public class Plot : MonoBehaviour
     private void OnMouseOver()
     {
 
-        if(Input.GetMouseButtonDown(1) && curState == 3 && crop == null && (!playerUI.isInPauseMenu() || !playerUI.IsInMenu() || !playerUI.GetCursorOnUI()))
+        if(playerUI.isInPauseMenu() || playerUI.IsInMenu() || playerUI.GetCursorOnUI())
+            return;
+
+        if(Input.GetMouseButtonDown(1) && curState == 3 && crop == null)
         {
 
             Debug.Log("Crop planted");
@@ -120,13 +136,37 @@ public class Plot : MonoBehaviour
 
         }
 
+        isHighlighted = true;
+
+        if(player.GetToolEquipped() != null && player.GetHasToolEquipped())
+            sprite.color = new Color(0.70f, 0.70f, 0.70f);
+
+        else
+            sprite.color = Color.white;
+
+    }
+
+    private void OnMouseExit()
+    {
+
+        isHighlighted = false;
+
+        sprite.color = Color.white;
+
+    }
+
+    public void Water(int waterAmount)
+    {
+
+        crop.Water(waterAmount);
+
     }
 
     public void Harvest()
     {
 
         crop.Harvest();
-        Destroy(transform.GetChild(0).gameObject);
+        Destroy(transform.GetChild(1).gameObject);
         crop = null;
 
     }

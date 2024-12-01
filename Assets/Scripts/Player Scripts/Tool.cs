@@ -6,11 +6,14 @@ using UnityEngine.UIElements;
 public abstract class Tool : MonoBehaviour
 {
 
-    public int toolUseTime;
+    public float toolUseTime;
+
     public int toolIndex;
     public int tier = 0;
 
     public bool canUseTool = true;
+
+    public AudioSource toolAudio;
 
     public abstract void UseTool(Plot plot);
     public abstract IEnumerator ToolCooldown();

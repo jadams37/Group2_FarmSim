@@ -11,6 +11,8 @@ public class WateringCan : Tool
     {
 
         toolIndex = 0;
+        toolUseTime = 1;
+        toolAudio = transform.GetComponent<AudioSource>();
 
     }
 
@@ -20,7 +22,8 @@ public class WateringCan : Tool
         if(canUseTool)
         {
 
-            plot.crop.Water(waterAmount);
+            plot.Water(waterAmount);
+            toolAudio.Play();
             canUseTool = false;
             StartCoroutine(ToolCooldown());
 
@@ -31,7 +34,7 @@ public class WateringCan : Tool
     public override IEnumerator ToolCooldown()
     {
 
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSecondsRealtime(toolUseTime);
         canUseTool = true;
 
     }

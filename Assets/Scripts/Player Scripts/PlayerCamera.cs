@@ -13,10 +13,6 @@ public class PlayerCamera : MonoBehaviour
     // Manages any input from the player besides movement such as pausing/unpausing
     // the game or closing any menus
 
-    // Pause status of game
-    private bool isPaused;
-    private bool fastForward;
-
     public GameObject gameCamera;
     private Camera camera;
 
@@ -30,12 +26,16 @@ public class PlayerCamera : MonoBehaviour
 
     public GameObject map;
 
-    public Map gameMap;
+    private GameManager gameManager;
+
+    private Map gameMap;
+
+    private DayNightCycle dayNightCycle;
 
     // Controls speed at which player controls the camera
-    private float minSpeed = 1.0f;
+    private float minSpeed = 10.0f;
     private float speed;
-    private float maxSpeed = 2.0f;
+    private float maxSpeed = 20.0f;
 
     private Vector3 offset = new Vector3(0, 0, -10);
 
@@ -66,12 +66,27 @@ public class PlayerCamera : MonoBehaviour
 
         playerData = transform.GetComponent<PlayerData>();
 
+        dayNightCycle = GameObject.Find("Main Camera").GetComponent<DayNightCycle>();
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
     }
 
     void Update()
     {
 
         DetermineInput();
+
+    }
+
+    private void SetCameraSpeed()
+    {
+
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+            speed = maxSpeed;
+
+        if(Input.GetKeyUp(KeyCode.LeftShift))
+            speed = minSpeed;
 
     }
 
@@ -86,7 +101,7 @@ public class PlayerCamera : MonoBehaviour
 
         ConstrainCamera();
 
-        transform.Translate(movement.normalized * Time.fixedDeltaTime * speed);
+        transform.Translate(movement.normalized * Time.unscaledDeltaTime * speed);
         gameCamera.transform.position = transform.position + offset;
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
@@ -95,11 +110,7 @@ public class PlayerCamera : MonoBehaviour
 
         camera.orthographicSize = Mathf.SmoothDamp(camera.orthographicSize, zoom, ref velocity, smoothTime);
 
-        if(Input.GetKeyDown(KeyCode.LeftShift))
-            speed = maxSpeed;
-
-        if(Input.GetKeyUp(KeyCode.LeftShift))
-            speed = minSpeed;
+        SetCameraSpeed();
 
     }
 
@@ -124,17 +135,26 @@ public class PlayerCamera : MonoBehaviour
     private void DetermineInput()
     {
 
+        if(gameManager.isGameOver)
+            return;
+        
         MenuInput();
-        MoveCamera();
-        EquipTool();
-        SetTimeSpeed();
+
+        if(!(gameManager.isPaused || playerUI.isInPauseMenu() || playerUI.IsInMenu()))
+        {
+
+            MoveCamera();
+            EquipTool();
+            SetTimeSpeed();
+
+        }
 
     }
 
     private void EquipTool()
     {
 
-        if(Input.GetKeyDown(KeyCode.Alpha1) && !playerData.GetHasToolEquipped())
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !playerData.GetHasToolEquipped())
         {
 
             playerData.SetToolEquipped(playerData.tools[0]);
@@ -143,7 +163,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if(Input.GetKeyDown(KeyCode.Alpha1) && playerData.GetHasToolEquipped() && transform.GetChild(0).gameObject.activeInHierarchy)
+        else if (Input.GetKeyDown(KeyCode.Alpha1) && playerData.GetHasToolEquipped() && transform.GetChild(0).gameObject.activeInHierarchy)
         {
 
             playerData.SetHasToolEquipped(false);
@@ -151,7 +171,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if(Input.GetKeyDown(KeyCode.Alpha2) && !playerData.GetHasToolEquipped())
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && !playerData.GetHasToolEquipped())
         {
 
             playerData.SetToolEquipped(playerData.tools[1]);
@@ -160,7 +180,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if(Input.GetKeyDown(KeyCode.Alpha2) && playerData.GetHasToolEquipped() && transform.GetChild(1).gameObject.activeInHierarchy)
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && playerData.GetHasToolEquipped() && transform.GetChild(1).gameObject.activeInHierarchy)
         {
 
             playerData.SetToolEquipped(null);
@@ -168,7 +188,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if(Input.GetKeyDown(KeyCode.Alpha3) && !playerData.GetHasToolEquipped())
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && !playerData.GetHasToolEquipped())
         {
 
             playerData.SetToolEquipped(playerData.tools[2]);
@@ -177,11 +197,26 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if(Input.GetKeyDown(KeyCode.Alpha3) && playerData.GetHasToolEquipped() && transform.GetChild(2).gameObject.activeInHierarchy)
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && playerData.GetHasToolEquipped() && transform.GetChild(2).gameObject.activeInHierarchy)
         {
 
             playerData.SetToolEquipped(null);
             playerData.SetHasToolEquipped(false);
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Alpha4) && !playerData.GetHasToolEquipped())
+        {
+
+            playerData.SetToolEquipped(playerData.tools[3]);
+            playerData.SetHasToolEquipped(true);
+
+        }
+
+        else if (Input.GetKeyUp(KeyCode.Alpha4) && playerData.GetHasToolEquipped())
+        {
+
+
 
         }
 
@@ -190,19 +225,17 @@ public class PlayerCamera : MonoBehaviour
     private void SetTimeSpeed()
     {
 
-        if(Input.GetKeyDown(KeyCode.F) && !fastForward)
+        if(Input.GetKeyDown(KeyCode.F) && !gameManager.fastForward)
         {
 
-            fastForward = true;
-            Time.timeScale = 100.0f;
+            gameManager.FastForward();
 
         }
 
-        else if(Input.GetKeyDown(KeyCode.F) && fastForward)
+        else if(Input.GetKeyDown(KeyCode.F) && gameManager.fastForward)
         {
 
-            fastForward = false;
-            Time.timeScale = 1;
+            gameManager.FastForward();
 
         }
 
@@ -212,9 +245,8 @@ public class PlayerCamera : MonoBehaviour
     {
 
         // Helper method for pausing game
-        Debug.Log("Pause");
-        isPaused = true;
-        Time.timeScale = 0;
+
+        gameManager.PauseGame();
 
         if(playerUI.GetShowUI())
             playerUI.ToggleUI();
@@ -227,9 +259,8 @@ public class PlayerCamera : MonoBehaviour
     {
 
         // Helper method for unpausing game
-        Debug.Log("Unpause");
-        isPaused = false;
-        Time.timeScale = 1.0f;
+        gameManager.PauseGame();
+
         playerUI.ToggleUI();
         playerUI.pauseMenu.SetActive(false);
 
@@ -239,7 +270,7 @@ public class PlayerCamera : MonoBehaviour
     {
 
         // Pauses game if player presses 'Escape' with no menus open
-        if(Input.GetKeyDown(KeyCode.Escape) && !isPaused && !playerUI.IsInMenu())
+        if(Input.GetKeyDown(KeyCode.Escape) && !gameManager.isPaused && !playerUI.IsInMenu())
         {
 
             Pause();
@@ -247,7 +278,7 @@ public class PlayerCamera : MonoBehaviour
         }
 
         // Unpauses game if player presses 'Escape' and the game is currently paused
-        else if(Input.GetKeyDown(KeyCode.Escape) && isPaused && !playerUI.IsInMenu())
+        else if(Input.GetKeyDown(KeyCode.Escape) && gameManager.isPaused && !playerUI.IsInMenu())
         {
 
             Unpause();
@@ -255,7 +286,7 @@ public class PlayerCamera : MonoBehaviour
         }
 
         // Closes any menu that is open if the player presses 'Escape'
-        else if(Input.GetKeyDown(KeyCode.Escape) && !isPaused && playerUI.IsInMenu())
+        else if(Input.GetKeyDown(KeyCode.Escape) && !gameManager.isPaused && playerUI.IsInMenu())
         {
 
             CloseMenu();
@@ -263,7 +294,7 @@ public class PlayerCamera : MonoBehaviour
         }
 
         // Hides or shows GUI with 'H' if the game is not paused and no menu is open
-        else if(Input.GetKeyDown(KeyCode.H) && !isPaused && !playerUI.IsInMenu())
+        else if(Input.GetKeyDown(KeyCode.H) && !gameManager.isPaused && !playerUI.IsInMenu())
             playerUI.ToggleUI();
 
     }
@@ -277,11 +308,6 @@ public class PlayerCamera : MonoBehaviour
         playerUI.marketButton.interactable = true;
         playerUI.GetActiveMenu().SetActive(false);
 
-    }
-
-    public bool GetIsPaused()
-    {
-        return isPaused;
     }
 
     public PlayerUI GetPlayerUI()
@@ -302,11 +328,6 @@ public class PlayerCamera : MonoBehaviour
     public Vector2 GetMovement()
     {
         return movement;
-    }
-
-    public void SetIsPaused(bool isPaused)
-    {
-        this.isPaused = isPaused;
     }
 
     public void SetPlayerUI(PlayerUI playerUI)

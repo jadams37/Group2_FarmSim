@@ -9,7 +9,8 @@ public class Plow : Tool
     {
 
         toolIndex = 1;
-        toolUseTime = 3;
+        toolUseTime = 2;
+        toolAudio = transform.GetComponent<AudioSource>();
 
     }
 
@@ -20,6 +21,7 @@ public class Plow : Tool
         {
 
             plot.Cultivate();
+            toolAudio.Play();
             canUseTool = false;
             StartCoroutine(ToolCooldown());
 

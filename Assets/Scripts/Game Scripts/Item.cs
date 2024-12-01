@@ -2,20 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+public class Item: MonoBehaviour
 {
 
-    private string itemName;
-    private string itemType;
+    public string itemName;
+    public string itemType;
 
-    private int itemPrice;
-    private int itemValue;
+    public int itemPrice;
+    public int itemValue;
 
-    private int quantity;
+    public int quantity;
 
-    private bool isSellable;
+    public Sprite itemSprite;
 
-    public Item(string itemName, string itemType, int itemPrice, int itemValue, int quantity, bool isSellable)
+    public int itemIndex;
+
+    public Item(string itemName, string itemType, int itemPrice, int itemValue, int quantity)
     {
 
         this.itemName = itemName;
@@ -23,20 +25,7 @@ public class Item : MonoBehaviour
         this.itemPrice = itemPrice;
         this.itemValue = itemValue;
         this.quantity = quantity;
-        this.isSellable = isSellable;
 
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public string GetItemName()
@@ -64,11 +53,6 @@ public class Item : MonoBehaviour
         return quantity;
     }
 
-    public bool GetIsSellable()
-    {
-        return isSellable;
-    }
-
     public void SetItemName(string itemName)
     {
         this.itemName = itemName;
@@ -92,11 +76,6 @@ public class Item : MonoBehaviour
     public void SetQuantity(int quantity)
     {
         this.quantity = quantity;
-    }
-
-    public void SetIsSellable(bool isSellable)
-    {
-         this.isSellable = isSellable;
     }
 
 }

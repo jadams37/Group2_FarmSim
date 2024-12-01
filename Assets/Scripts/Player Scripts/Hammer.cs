@@ -8,7 +8,8 @@ public class Hammer : Tool
     {
 
         toolIndex = 2;
-        toolUseTime = 3;
+        toolUseTime = 0.5f;
+        toolAudio = transform.GetComponent<AudioSource>();
 
     }
 
@@ -19,6 +20,7 @@ public class Hammer : Tool
         {
 
             plot.ClearDebris();
+            toolAudio.Play();
             canUseTool = false;
             StartCoroutine(ToolCooldown());
 

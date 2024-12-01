@@ -13,6 +13,7 @@ public class DayNightCycle : MonoBehaviour
     public int mins;
     public int hours;
     public int days;
+    public int curDay;
 
     void Start()
     {
@@ -22,10 +23,11 @@ public class DayNightCycle : MonoBehaviour
         hours = 7;
         days = 1;
 
+        curDay = days;
+
         // Load time stats from save here
 
     }
-
 
     void FixedUpdate()
     {
@@ -34,7 +36,20 @@ public class DayNightCycle : MonoBehaviour
 
     }
 
-    public void CalculateTime()
+    private void NewDayTransition()
+    {
+
+        if(days > curDay && hours == 7)
+        {
+
+            curDay = days;
+            // Play morning sound
+
+        }
+
+    }
+
+    private void CalculateTime()
     {
 
         seconds += Time.fixedDeltaTime * tick;
@@ -67,7 +82,7 @@ public class DayNightCycle : MonoBehaviour
 
     }
 
-    public void ControlWeight()
+    private void ControlWeight()
     {
 
         if(hours >= 20 && hours < 21)

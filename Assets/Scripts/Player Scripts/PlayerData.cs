@@ -17,19 +17,48 @@ public class PlayerData : MonoBehaviour
 
     public Tool[] tools;
 
+    public int totalMoneySpent;
+
+    public int highestMoney;
+
+    public float playTime;
+
     // Start is called before the first frame update
     void Start()
     {
+
         inventory = new Inventory_Redone();
 
         toolEquipped = null;
+
+        playTime = 0;
+
+        highestMoney = moneyAmount;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+        SetPlayTime();
+        SetHighestMoney();
+
+    }
+
+    private void SetPlayTime()
+    {
+
+        playTime += Time.unscaledDeltaTime;
+
+    }
+
+    private void SetHighestMoney()
+    {
+
+        if(moneyAmount > highestMoney)
+            highestMoney = moneyAmount;
+
     }
 
     public int getMoneyAmount()

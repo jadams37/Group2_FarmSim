@@ -28,7 +28,7 @@ public class MarketMath
             float discount = Random.Range(1, MAX_DISCOUNT) / 100;
             int newPrice = (int)(normPrice * (1 - discount));
             return new Item(item.GetItemName(), item.GetItemType(), newPrice, 
-                            item.GetItemValue(), item.GetQuantity(), item.GetIsSellable());
+                            item.GetItemValue(), item.GetQuantity());
 
         }
 
@@ -73,18 +73,18 @@ public class MarketMath
                 valuePerc = Random.Range(1, MAX_DISCOUNT) / 100;
                 newValue = (int)(normValue * (1 + (valuePerc - soldPerc)));
                 return new Item(item.GetItemName(), item.GetItemType(),
-                                item.GetItemPrice(), newValue, item.GetQuantity(), item.GetIsSellable());
+                                item.GetItemPrice(), newValue, item.GetQuantity());
 
             case VALUE_DEC:
                 valuePerc = Random.Range(1, MAX_DISCOUNT) / 100;
                 newValue = (int)(normValue * (1 - (valuePerc + soldPerc)));
                 return new Item(item.GetItemName(), item.GetItemType(),
-                                item.GetItemPrice(), newValue, item.GetQuantity(), item.GetIsSellable());
+                                item.GetItemPrice(), newValue, item.GetQuantity());
 
             default:
                 newValue = (int)(normValue * (1 - soldPerc));
                 return new Item(item.GetItemName(), item.GetItemType(),
-                                item.GetItemPrice(), newValue, item.GetQuantity(), item.GetIsSellable());
+                                item.GetItemPrice(), newValue, item.GetQuantity());
 
         }
 
