@@ -1,3 +1,4 @@
+using Microsoft.Unity.VisualStudio.Editor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,29 +13,62 @@ public class PlayerCamera : MonoBehaviour
     // Manages any input from the player besides movement such as pausing/unpausing
     // the game or closing any menus
 
-    // Pause status of game
-    private bool isPaused;
-
     public GameObject gameCamera;
+    private Camera camera;
 
     // GUI container with all menus & buttons
     public PlayerUI playerUI;
 
+    private PlayerData playerData;
+
     // EventSystem for button events
     public EventSystem eventSystem;
 
+    public GameObject map;
+
+    private GameManager gameManager;
+
+    private Map gameMap;
+
+    private DayNightCycle dayNightCycle;
+
     // Controls speed at which player controls the camera
-    public float speed = 10.0f;
+    private float minSpeed = 10.0f;
+    private float speed;
+    private float maxSpeed = 20.0f;
 
     private Vector3 offset = new Vector3(0, 0, -10);
 
     // 2D vector to store x and y input values
     private Vector3 movement;
 
+    private float zoom;
+    private float zoomMultiplier = 4f;
+    private float minZoom = 5f;
+    private float maxZoom = 10f;
+    private float velocity = 0f;
+    private float smoothTime = 0.25f;
+
     // Class containing Player input information and camera movement
 
     void Start()
     {
+
+        gameMap = map.GetComponent<Map>();
+
+        transform.position = gameMap.GetCenter();
+
+        camera = gameCamera.GetComponent<Camera>();
+
+        zoom = camera.orthographicSize;
+
+        speed = minSpeed;
+
+        playerData = transform.GetComponent<PlayerData>();
+
+        dayNightCycle = GameObject.Find("Main Camera").GetComponent<DayNightCycle>();
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
     }
 
@@ -45,16 +79,55 @@ public class PlayerCamera : MonoBehaviour
 
     }
 
+    private void SetCameraSpeed()
+    {
+
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+            speed = maxSpeed;
+
+        if(Input.GetKeyUp(KeyCode.LeftShift))
+            speed = minSpeed;
+
+    }
+
     private void MoveCamera()
     {
 
         // Instantiates movement Vector2 as input axes of horizontal and vertical through InputManager
         // Normalize the vector to prevent faster speed when moving diagonally
+
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
-        transform.Translate(movement.normalized * Time.deltaTime * speed);
 
+        ConstrainCamera();
+
+        transform.Translate(movement.normalized * Time.unscaledDeltaTime * speed);
         gameCamera.transform.position = transform.position + offset;
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        zoom -= scroll * zoomMultiplier;
+        zoom = Mathf.Clamp(zoom, minZoom, maxZoom);
+
+        camera.orthographicSize = Mathf.SmoothDamp(camera.orthographicSize, zoom, ref velocity, smoothTime);
+
+        SetCameraSpeed();
+
+    }
+
+    private void ConstrainCamera()
+    {
+
+        if(movement.x < 0 && transform.position.x <= gameMap.xBounds[0])
+            movement.x = 0;
+
+        if(movement.x > 0 && transform.position.x >= gameMap.xBounds[1])
+            movement.x = 0;
+
+        if(movement.y < 0 && transform.position.y <= gameMap.yBounds[0])
+            movement.y = 0;
+
+        if(movement.y > 0 && transform.position.y >= gameMap.yBounds[1])
+            movement.y = 0;
 
     }
 
@@ -62,8 +135,109 @@ public class PlayerCamera : MonoBehaviour
     private void DetermineInput()
     {
 
+        if(gameManager.isGameOver)
+            return;
+        
         MenuInput();
-        MoveCamera();
+
+        if(!(gameManager.isPaused || playerUI.isInPauseMenu() || playerUI.IsInMenu()))
+        {
+
+            MoveCamera();
+            EquipTool();
+            SetTimeSpeed();
+
+        }
+
+    }
+
+    private void EquipTool()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !playerData.GetHasToolEquipped())
+        {
+
+            playerData.SetToolEquipped(playerData.tools[0]);
+            playerData.SetHasToolEquipped(true);
+            playerUI.ToolIcon.GetComponent<UnityEngine.UI.Image>().sprite = playerUI.toolIcons[0];
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Alpha1) && playerData.GetHasToolEquipped() && transform.GetChild(0).gameObject.activeInHierarchy)
+        {
+
+            playerData.SetHasToolEquipped(false);
+            playerData.SetToolEquipped(null);
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && !playerData.GetHasToolEquipped())
+        {
+
+            playerData.SetToolEquipped(playerData.tools[1]);
+            playerData.SetHasToolEquipped(true);
+            playerUI.ToolIcon.GetComponent<UnityEngine.UI.Image>().sprite = playerUI.toolIcons[1];
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && playerData.GetHasToolEquipped() && transform.GetChild(1).gameObject.activeInHierarchy)
+        {
+
+            playerData.SetToolEquipped(null);
+            playerData.SetHasToolEquipped(false);
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && !playerData.GetHasToolEquipped())
+        {
+
+            playerData.SetToolEquipped(playerData.tools[2]);
+            playerData.SetHasToolEquipped(true);
+            playerUI.ToolIcon.GetComponent<UnityEngine.UI.Image>().sprite = playerUI.toolIcons[2];
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && playerData.GetHasToolEquipped() && transform.GetChild(2).gameObject.activeInHierarchy)
+        {
+
+            playerData.SetToolEquipped(null);
+            playerData.SetHasToolEquipped(false);
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Alpha4) && !playerData.GetHasToolEquipped())
+        {
+
+            playerData.SetToolEquipped(playerData.tools[3]);
+            playerData.SetHasToolEquipped(true);
+
+        }
+
+        else if (Input.GetKeyUp(KeyCode.Alpha4) && playerData.GetHasToolEquipped())
+        {
+
+
+
+        }
+
+    }
+
+    private void SetTimeSpeed()
+    {
+
+        if(Input.GetKeyDown(KeyCode.F) && !gameManager.fastForward)
+        {
+
+            gameManager.FastForward();
+
+        }
+
+        else if(Input.GetKeyDown(KeyCode.F) && gameManager.fastForward)
+        {
+
+            gameManager.FastForward();
+
+        }
 
     }
 
@@ -71,9 +245,12 @@ public class PlayerCamera : MonoBehaviour
     {
 
         // Helper method for pausing game
-        Debug.Log("Pause");
-        isPaused = true;
-        Time.timeScale = 0;
+
+        gameManager.PauseGame();
+
+        if(playerUI.GetShowUI())
+            playerUI.ToggleUI();
+
         playerUI.pauseMenu.SetActive(true);
 
     }
@@ -82,9 +259,9 @@ public class PlayerCamera : MonoBehaviour
     {
 
         // Helper method for unpausing game
-        Debug.Log("Unpause");
-        isPaused = false;
-        Time.timeScale = 1.0f;
+        gameManager.PauseGame();
+
+        playerUI.ToggleUI();
         playerUI.pauseMenu.SetActive(false);
 
     }
@@ -93,7 +270,7 @@ public class PlayerCamera : MonoBehaviour
     {
 
         // Pauses game if player presses 'Escape' with no menus open
-        if(Input.GetKeyDown(KeyCode.Escape) && !isPaused && !playerUI.IsInMenu())
+        if(Input.GetKeyDown(KeyCode.Escape) && !gameManager.isPaused && !playerUI.IsInMenu())
         {
 
             Pause();
@@ -101,7 +278,7 @@ public class PlayerCamera : MonoBehaviour
         }
 
         // Unpauses game if player presses 'Escape' and the game is currently paused
-        else if(Input.GetKeyDown(KeyCode.Escape) && isPaused && !playerUI.IsInMenu())
+        else if(Input.GetKeyDown(KeyCode.Escape) && gameManager.isPaused && !playerUI.IsInMenu())
         {
 
             Unpause();
@@ -109,7 +286,7 @@ public class PlayerCamera : MonoBehaviour
         }
 
         // Closes any menu that is open if the player presses 'Escape'
-        else if(Input.GetKeyDown(KeyCode.Escape) && !isPaused && playerUI.IsInMenu())
+        else if(Input.GetKeyDown(KeyCode.Escape) && !gameManager.isPaused && playerUI.IsInMenu())
         {
 
             CloseMenu();
@@ -117,7 +294,7 @@ public class PlayerCamera : MonoBehaviour
         }
 
         // Hides or shows GUI with 'H' if the game is not paused and no menu is open
-        else if(Input.GetKeyDown(KeyCode.H) && !isPaused && !playerUI.IsInMenu())
+        else if(Input.GetKeyDown(KeyCode.H) && !gameManager.isPaused && !playerUI.IsInMenu())
             playerUI.ToggleUI();
 
     }
@@ -131,11 +308,6 @@ public class PlayerCamera : MonoBehaviour
         playerUI.marketButton.interactable = true;
         playerUI.GetActiveMenu().SetActive(false);
 
-    }
-
-    public bool GetIsPaused()
-    {
-        return isPaused;
     }
 
     public PlayerUI GetPlayerUI()
@@ -156,11 +328,6 @@ public class PlayerCamera : MonoBehaviour
     public Vector2 GetMovement()
     {
         return movement;
-    }
-
-    public void SetIsPaused(bool isPaused)
-    {
-        this.isPaused = isPaused;
     }
 
     public void SetPlayerUI(PlayerUI playerUI)
