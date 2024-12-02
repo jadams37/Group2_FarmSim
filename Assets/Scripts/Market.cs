@@ -37,16 +37,10 @@ public class Market : MonoBehaviour
     public void PurchaseItem(Item item)
     {
 
-        if(!player.GetComponentInChildren<Seeds>().seedsOwned.Contains(item.itemIndex))
-        {
-
-            playerDat.setMoneyAmount(playerDat.getMoneyAmount() - item.itemPrice);
-            player.GetComponentInChildren<Seeds>().seedsOwned.Add(item.itemIndex);
-
-        }
-
-        else
-            Debug.Log("Item owned already");
+        playerDat.setMoneyAmount(playerDat.getMoneyAmount() - item.itemPrice);
+        playerDat.totalMoneySpent += item.itemPrice;
+        player.GetComponentInChildren<Seeds>().seedsOwned.Add(item.itemIndex);
+        player.GetComponentInChildren<Seeds>().seedsOwned.Sort();
 
     }
 

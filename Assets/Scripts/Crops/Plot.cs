@@ -26,6 +26,8 @@ public class Plot : MonoBehaviour
 
     private PlayerData player;
 
+    private Seeds seeds;
+
     public Sprite[] spriteStates;
 
     private GameObject waterIcon;
@@ -56,11 +58,11 @@ public class Plot : MonoBehaviour
 
         sprite.sprite = spriteStates[curState];
 
-        cropObject = cropObjects[0];
-
         player = GameObject.Find("Player").GetComponent<PlayerData>();
 
         waterIcon = transform.GetChild(0).gameObject;
+
+        seeds = GameObject.Find("Seeds").GetComponent<Seeds>();
 
     }
 
@@ -72,6 +74,12 @@ public class Plot : MonoBehaviour
 
         else
             waterIcon.SetActive(false);
+
+        if(seeds.seedsOwned.Count > 0 && seeds.seedsOwned.Contains(seeds.seedEquipped))
+            cropObject = cropObjects[seeds.seedEquipped];
+
+        else
+            cropObject = null;
 
     }
 
@@ -124,7 +132,7 @@ public class Plot : MonoBehaviour
         if(playerUI.isInPauseMenu() || playerUI.IsInMenu() || playerUI.GetCursorOnUI())
             return;
 
-        if(Input.GetMouseButtonDown(1) && curState == 3 && crop == null)
+        if(Input.GetMouseButtonDown(1) && curState == 3 && crop == null && cropObject != null)
         {
 
             Debug.Log("Crop planted");
@@ -133,6 +141,7 @@ public class Plot : MonoBehaviour
             cropObject.transform.rotation = transform.rotation;
             cropObject.transform.parent = transform;
             crop = cropObject.GetComponent<Crop>();
+            seeds.seedsOwned.Remove(seeds.seedEquipped);
 
         }
 
@@ -165,6 +174,7 @@ public class Plot : MonoBehaviour
     public void Harvest()
     {
 
+        player.setMoneyAmount(player.getMoneyAmount() + (crop.drop.itemValue * crop.yieldCount));
         crop.Harvest();
         Destroy(transform.GetChild(1).gameObject);
         crop = null;

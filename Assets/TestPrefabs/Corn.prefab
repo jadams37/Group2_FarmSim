@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: -183549908, guid: 8765bb0693ce0b349a53829818647691, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -97,10 +97,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93f64911767bc2649889b4804c36d3bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yieldCount: 0
+  yieldCount: 5
+  hydrationLevel: 50
   growthRate: 10
-  drop: {fileID: 0}
+  drop: {fileID: 182157531888091825, guid: 0bb3fa38c2dd6ff4990daee9a9cfd4ed, type: 3}
   spriteStates:
   - {fileID: -183549908, guid: 8765bb0693ce0b349a53829818647691, type: 3}
   - {fileID: -1395473059, guid: 8765bb0693ce0b349a53829818647691, type: 3}
   - {fileID: 2034342471, guid: 8765bb0693ce0b349a53829818647691, type: 3}
+  isDecaying: 0

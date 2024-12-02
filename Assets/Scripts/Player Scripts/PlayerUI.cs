@@ -22,6 +22,13 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public GameObject inventoryMenu;
     public GameObject marketMenu;
     public GameObject pauseMenu;
+    public GameObject seedsMenu;
+    public GameObject endMenu;
+
+    public TextMeshProUGUI endText;
+    public TextMeshProUGUI playTimeText;
+    public TextMeshProUGUI totalMoneySpentText;
+    public TextMeshProUGUI highestMoneyText;
 
     public Button inventoryButton;
     public Button marketButton;
@@ -187,6 +194,7 @@ public class PlayerUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         gameTime.SetActive(false);
         inventoryButton.gameObject.SetActive(false);
         marketButton.gameObject.SetActive(false);
+        seedsMenu.gameObject.SetActive(false);
 
     }
 

@@ -146,6 +146,26 @@ public class PlayerCamera : MonoBehaviour
             MoveCamera();
             EquipTool();
             SetTimeSpeed();
+            GodMode();
+
+        }
+
+    }
+
+    private void GodMode()
+    {
+
+        if(Input.GetKeyDown(KeyCode.G) && !gameManager.isInGodMode)
+        {
+
+            gameManager.isInGodMode = true;
+
+        }
+
+        else if(Input.GetKeyDown(KeyCode.G) && gameManager.isInGodMode)
+        {
+
+            gameManager.isInGodMode = false;
 
         }
 
@@ -154,7 +174,7 @@ public class PlayerCamera : MonoBehaviour
     private void EquipTool()
     {
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && !playerData.GetHasToolEquipped())
+        if(Input.GetKeyDown(KeyCode.Alpha1) && !playerData.GetHasToolEquipped() && !playerUI.seedsMenu.activeInHierarchy)
         {
 
             playerData.SetToolEquipped(playerData.tools[0]);
@@ -163,7 +183,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if (Input.GetKeyDown(KeyCode.Alpha1) && playerData.GetHasToolEquipped() && transform.GetChild(0).gameObject.activeInHierarchy)
+        else if(Input.GetKeyDown(KeyCode.Alpha1) && playerData.GetHasToolEquipped())
         {
 
             playerData.SetHasToolEquipped(false);
@@ -171,7 +191,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && !playerData.GetHasToolEquipped())
+        else if(Input.GetKeyDown(KeyCode.Alpha2) && !playerData.GetHasToolEquipped() && !playerUI.seedsMenu.activeInHierarchy)
         {
 
             playerData.SetToolEquipped(playerData.tools[1]);
@@ -180,7 +200,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && playerData.GetHasToolEquipped() && transform.GetChild(1).gameObject.activeInHierarchy)
+        else if(Input.GetKeyDown(KeyCode.Alpha2) && playerData.GetHasToolEquipped())
         {
 
             playerData.SetToolEquipped(null);
@@ -188,7 +208,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if (Input.GetKeyDown(KeyCode.Alpha3) && !playerData.GetHasToolEquipped())
+        else if(Input.GetKeyDown(KeyCode.Alpha3) && !playerData.GetHasToolEquipped() && !playerUI.seedsMenu.activeInHierarchy)
         {
 
             playerData.SetToolEquipped(playerData.tools[2]);
@@ -197,7 +217,7 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if (Input.GetKeyDown(KeyCode.Alpha3) && playerData.GetHasToolEquipped() && transform.GetChild(2).gameObject.activeInHierarchy)
+        else if(Input.GetKeyDown(KeyCode.Alpha3) && playerData.GetHasToolEquipped())
         {
 
             playerData.SetToolEquipped(null);
@@ -205,18 +225,17 @@ public class PlayerCamera : MonoBehaviour
 
         }
 
-        else if (Input.GetKeyDown(KeyCode.Alpha4) && !playerData.GetHasToolEquipped())
+        else if(Input.GetKeyDown(KeyCode.Alpha4) && !playerData.GetHasToolEquipped() && !playerUI.seedsMenu.activeInHierarchy)
         {
 
-            playerData.SetToolEquipped(playerData.tools[3]);
-            playerData.SetHasToolEquipped(true);
+            playerUI.seedsMenu.SetActive(true);
 
         }
 
-        else if (Input.GetKeyUp(KeyCode.Alpha4) && playerData.GetHasToolEquipped())
+        else if(Input.GetKeyDown(KeyCode.Alpha4) && playerUI.seedsMenu.activeInHierarchy)
         {
 
-
+            playerUI.seedsMenu.SetActive(false);
 
         }
 

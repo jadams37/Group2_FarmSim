@@ -8,14 +8,20 @@ public class GameManager : MonoBehaviour
     public bool isPaused;
     public bool fastForward;
     public bool isNight;
+    public bool isInGodMode;
+    public bool hasPaidMortgage;
 
     public bool isGameOver;
 
     public GameObject[] ambiance;
 
+    public GameObject[] music;
+
     private DayNightCycle dayNightCycle;
 
     private PlayerData player;
+
+    private PlayerUI playerUI;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +31,8 @@ public class GameManager : MonoBehaviour
 
         player = GameObject.Find("Player").GetComponent<PlayerData>();
 
+        playerUI = GameObject.Find("GameUI").GetComponent<PlayerUI>();
+
     }
 
     // Update is called once per frame
@@ -33,8 +41,54 @@ public class GameManager : MonoBehaviour
 
         SetTimeOfDay();
         SetAmbience();
+        SetMusic();
+
+        //DeductMortgage();
 
         EndGame();
+
+    }
+
+    private void SetMusic()
+    {
+
+        if (!isGameOver)
+        {
+
+            music[0].SetActive(true);
+            music[1].SetActive(false);
+
+        }
+
+        else
+        {
+
+            music[0].SetActive(false);
+            music[1].SetActive(true);
+
+        }
+
+    }
+
+    private void DeductMortgage()
+    {
+
+        int month = 1;
+
+        if(dayNightCycle.days % 30 == 0 && !hasPaidMortgage)
+        {
+
+            player.setMoneyAmount(player.getMoneyAmount() - 100);
+            hasPaidMortgage = true;
+
+        }
+
+        else if(dayNightCycle.days % 30 == 0 && hasPaidMortgage)
+        {
+
+            hasPaidMortgage = true;
+
+        }
 
     }
 
@@ -86,10 +140,42 @@ public class GameManager : MonoBehaviour
     private void EndGame()
     {
 
-        if (player.getMoneyAmount() <= -5000)
+        if(player.getMoneyAmount() <= -5000 && !isInGodMode)
         {
 
+
+            if(playerUI.IsInMenu())
+                playerUI.GetActiveMenu().SetActive(false);
+
+            if(playerUI.GetShowUI())
+                playerUI.ToggleUI();
+
+            playerUI.endMenu.SetActive(true);
+            playerUI.endText.text = "You Lose!";
+            playerUI.playTimeText.text = "Playtime: " + ConvertTime(player.playTime);
+            playerUI.totalMoneySpentText.text = "Total Money Spent: " + string.Format("${0}", player.totalMoneySpent);
+            playerUI.highestMoneyText.text = "Highest Money: " + string.Format("${0}", player.highestMoney);
             isGameOver = true;
+            Debug.Log("Fail Screen");
+
+        }
+
+        else if(player.getMoneyAmount() >= 5000)
+        {
+
+            if(playerUI.IsInMenu())
+                playerUI.GetActiveMenu().SetActive(false);
+
+            if(playerUI.GetShowUI())
+                playerUI.ToggleUI();
+
+            playerUI.endMenu.SetActive(true);
+            playerUI.endText.text = "You Win!";
+            playerUI.playTimeText.text = "Playtime: " + ConvertTime(player.playTime);
+            playerUI.totalMoneySpentText.text = "Total Money Spent: " + string.Format("${0}", player.totalMoneySpent);
+            playerUI.highestMoneyText.text = "Highest Money: " + string.Format("${0}", player.highestMoney);
+            isGameOver = true;
+            Debug.Log("Win Screen");
 
         }
 
@@ -99,6 +185,16 @@ public class GameManager : MonoBehaviour
             isGameOver = false;
 
         }
+
+    }
+
+    private string ConvertTime(float playTime)
+    {
+
+        int seconds = (int)playTime % 60;
+        int minutes = (int)playTime / 60;
+
+        return string.Format("{1}:{0}", seconds, minutes);
 
     }
 

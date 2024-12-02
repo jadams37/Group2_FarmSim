@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerData : MonoBehaviour
 {
 
-    private int moneyAmount = 0;
+    private int moneyAmount = 500;
 
     private Item[] itemsSoldForDay;
 
@@ -23,6 +23,8 @@ public class PlayerData : MonoBehaviour
 
     public float playTime;
 
+    private GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,16 +35,25 @@ public class PlayerData : MonoBehaviour
 
         playTime = 0;
 
+        totalMoneySpent = 0;
+
         highestMoney = moneyAmount;
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
 
-        SetPlayTime();
-        SetHighestMoney();
+        if(!gameManager.isPaused && !gameManager.isGameOver)
+        {
+
+            SetPlayTime();
+            SetHighestMoney();
+
+        }
 
     }
 

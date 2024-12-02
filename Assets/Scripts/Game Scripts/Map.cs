@@ -22,7 +22,7 @@ public class Map : MonoBehaviour
     void Start()
     {
 
-        GenerateMap();
+        StartCoroutine(GenerateMap());
         xBounds = new int[]{0, cols};
         yBounds = new int[]{0, rows};
         StartCoroutine(LockPlots());
@@ -52,8 +52,10 @@ public class Map : MonoBehaviour
 
     }
 
-    private void GenerateMap()
+    IEnumerator GenerateMap()
     {
+
+        yield return new WaitForEndOfFrame();
 
         Vector3 curPos = transform.position;
 

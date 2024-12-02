@@ -43,7 +43,6 @@ public class DayNightCycle : MonoBehaviour
         {
 
             curDay = days;
-            // Play morning sound
 
         }
 
