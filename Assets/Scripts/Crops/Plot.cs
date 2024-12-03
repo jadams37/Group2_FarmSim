@@ -153,7 +153,6 @@ public class Plot : MonoBehaviour
         {
 
             Debug.Log("Plot is cultivated");
-            return;
 
         }
 
