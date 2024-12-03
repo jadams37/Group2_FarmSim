@@ -5,23 +5,36 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
+    // Status variables
     public bool isPaused;
     public bool fastForward;
     public bool isNight;
     public bool isInGodMode;
     public bool hasPaidMortgage;
-
     public bool isGameOver;
 
+    // Array of ambiance sound effects
     public GameObject[] ambiance;
 
+    // Array of music sound effects
     public GameObject[] music;
 
+    // Reference to DayNightCycle object
     private DayNightCycle dayNightCycle;
 
+    // Reference to PlayerData object
     private PlayerData player;
 
+    // Reference to PlayerUI object
     private PlayerUI playerUI;
+
+    // Game-related constants
+    public const float NORMAL = 1.0f;
+    public const float FAST_FORWARD = 100.0f;
+    public const float PAUSED = 0.0f;
+
+    public const int WIN_MONEY = 5000;
+    public const int LOSE_MONEY = -5000;
 
     // Start is called before the first frame update
     void Start()
@@ -42,17 +55,15 @@ public class GameManager : MonoBehaviour
         SetTimeOfDay();
         SetAmbience();
         SetMusic();
-
-        //DeductMortgage();
-
         EndGame();
 
     }
 
+    // Helper method to set music if game is over or not
     private void SetMusic()
     {
 
-        if (!isGameOver)
+        if(!isGameOver)
         {
 
             music[0].SetActive(true);
@@ -70,28 +81,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void DeductMortgage()
-    {
-
-        int month = 1;
-
-        if(dayNightCycle.days % 30 == 0 && !hasPaidMortgage)
-        {
-
-            player.setMoneyAmount(player.getMoneyAmount() - 100);
-            hasPaidMortgage = true;
-
-        }
-
-        else if(dayNightCycle.days % 30 == 0 && hasPaidMortgage)
-        {
-
-            hasPaidMortgage = true;
-
-        }
-
-    }
-
+    // Method to toggle time fast forwarding
     public void FastForward()
     {
 
@@ -99,7 +89,7 @@ public class GameManager : MonoBehaviour
         {
 
             fastForward = true;
-            Time.timeScale = 100.0f;
+            Time.timeScale = FAST_FORWARD;
 
         }
 
@@ -107,12 +97,13 @@ public class GameManager : MonoBehaviour
         {
 
             fastForward = false;
-            Time.timeScale = 1.0f;
+            Time.timeScale = NORMAL;
 
         }
 
     }
 
+    // Method to pause game
     public void PauseGame()
     {
 
@@ -121,7 +112,7 @@ public class GameManager : MonoBehaviour
 
             Debug.Log("Pause");
             isPaused = true;
-            Time.timeScale = 0f;
+            Time.timeScale = PAUSED;
 
         }
 
@@ -130,17 +121,17 @@ public class GameManager : MonoBehaviour
 
             Debug.Log("Unpause");
             isPaused = false;
-            Time.timeScale = 1.0f;
+            Time.timeScale = NORMAL;
 
         }
 
-
     }
 
+    // Method to end game if player meets requirements
     private void EndGame()
     {
 
-        if(player.getMoneyAmount() <= -5000 && !isInGodMode)
+        if(player.getMoneyAmount() <= LOSE_MONEY && !isInGodMode)
         {
 
 
@@ -160,7 +151,7 @@ public class GameManager : MonoBehaviour
 
         }
 
-        else if(player.getMoneyAmount() >= 5000)
+        else if(player.getMoneyAmount() >= WIN_MONEY)
         {
 
             if(playerUI.IsInMenu())
@@ -172,22 +163,21 @@ public class GameManager : MonoBehaviour
             playerUI.endMenu.SetActive(true);
             playerUI.endText.text = "You Win!";
             playerUI.playTimeText.text = "Playtime: " + ConvertTime(player.playTime);
-            playerUI.totalMoneySpentText.text = "Total Money Spent: " + string.Format("${0}", player.totalMoneySpent);
-            playerUI.highestMoneyText.text = "Highest Money: " + string.Format("${0}", player.highestMoney);
+            playerUI.totalMoneySpentText.text = "Total Money Spent: "
+                     + string.Format("${0}", player.totalMoneySpent);
+            playerUI.highestMoneyText.text = "Highest Money: "
+                     + string.Format("${0}", player.highestMoney);
             isGameOver = true;
             Debug.Log("Win Screen");
 
         }
 
         else
-        {
-
             isGameOver = false;
-
-        }
 
     }
 
+    // Helper method to convert playtime to a more readable format
     private string ConvertTime(float playTime)
     {
 
@@ -198,10 +188,12 @@ public class GameManager : MonoBehaviour
 
     }
 
+    // Method to set whether it is day or night
     private void SetTimeOfDay()
     {
 
-        if(dayNightCycle.hours >= 20 || dayNightCycle.hours < 6)
+        if(dayNightCycle.hours >= DayNightCycle.NIGHT_INTERVAL
+            || dayNightCycle.hours < DayNightCycle.DAY_INTERVAL)
             isNight = true;
 
         else
@@ -209,10 +201,9 @@ public class GameManager : MonoBehaviour
 
     }
 
+    // Method to set ambience based on time of day
     private void SetAmbience()
     {
-
-        
 
         if(!isNight)
         {

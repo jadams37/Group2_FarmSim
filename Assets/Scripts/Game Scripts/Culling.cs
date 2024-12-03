@@ -5,12 +5,9 @@ using UnityEngine;
 public class Culling : MonoBehaviour
 {
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // Class relating to Performance Optimizations
 
+    // Method to show all plots in camera view
     private void OnTriggerEnter2D(Collider2D other)
     {
 
@@ -24,6 +21,7 @@ public class Culling : MonoBehaviour
 
     }
 
+    // Method to hide all plots out of camera view
     private void OnTriggerExit2D(Collider2D other)
     {
 

@@ -8,23 +8,15 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
 
+    // Class relating to Main Menu and End Menu functions
+    
+    // GameObjects for each menu
     public GameObject mainMenu;
     public GameObject storyMenu;
     public GameObject controlsMenu;
     public GameObject creditsMenu;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    // Method to load main game scene on start of game
     public void StartGame()
     {
 
@@ -32,6 +24,7 @@ public class MainMenu : MonoBehaviour
 
     }
 
+    // Method to show story menu
     public void Story()
     {
 
@@ -40,6 +33,7 @@ public class MainMenu : MonoBehaviour
 
     }
 
+    // Method to show controls menu
     public void Controls()
     {
 
@@ -48,13 +42,7 @@ public class MainMenu : MonoBehaviour
 
     }
 
-    public void Options()
-    {
-
-        
-
-    }
-
+    // Method to show credits menu
     public void Credits()
     {
 
@@ -63,6 +51,7 @@ public class MainMenu : MonoBehaviour
 
     }
 
+    // Method to return to start screen scene
     public void ReturnToTitle()
     {
 
@@ -70,6 +59,7 @@ public class MainMenu : MonoBehaviour
 
     }
 
+    // Method to quit current game instance
     public void Quit()
     {
 

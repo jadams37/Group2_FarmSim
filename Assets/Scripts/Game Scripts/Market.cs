@@ -5,17 +5,20 @@ using UnityEngine;
 public class Market : MonoBehaviour
 {
 
+    // Class relating to all market functions
+
+    // List containing items for sale
     public List<Item> marketInventory;
 
+    // Reference to player gameobject
     private GameObject player;
 
+    // Reference to PlayerData object
     private PlayerData playerDat;
 
     // Start is called before the first frame update
     void Start()
     {
-
-
 
         player = GameObject.Find("Player");
 
@@ -27,13 +30,8 @@ public class Market : MonoBehaviour
             marketInventory.Add(transform.GetChild(item).GetComponent<Item>());
 
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    
+    // Method to purchase passed item
     public void PurchaseItem(Item item)
     {
 
@@ -41,13 +39,6 @@ public class Market : MonoBehaviour
         playerDat.totalMoneySpent += item.itemPrice;
         player.GetComponentInChildren<Seeds>().seedsOwned.Add(item.itemIndex);
         player.GetComponentInChildren<Seeds>().seedsOwned.Sort();
-
-    }
-
-    public void SellYield()
-    {
-
-
 
     }
 

@@ -6,26 +6,28 @@ using UnityEngine.Rendering.PostProcessing;
 public class DayNightCycle : MonoBehaviour
 {
 
+    // Class relating to Day/Night Cycle
+
+    // PostProcessVolume object to apply effects
     public PostProcessVolume postProcVol;
 
+    // Time related variables
     public float tick;
     public float seconds;
     public int mins;
     public int hours;
     public int days;
-    public int curDay;
+
+    // Day/Night Cycle related constants
+    public const int NIGHT_INTERVAL = 20;
+    public const int DAY_INTERVAL = 6;
 
     void Start()
     {
 
-        // Default
         tick = 60.0f;
         hours = 7;
         days = 1;
-
-        curDay = days;
-
-        // Load time stats from save here
 
     }
 
@@ -36,18 +38,7 @@ public class DayNightCycle : MonoBehaviour
 
     }
 
-    private void NewDayTransition()
-    {
-
-        if(days > curDay && hours == 7)
-        {
-
-            curDay = days;
-
-        }
-
-    }
-
+    // Method to determine number of seconds, hours, and days
     private void CalculateTime()
     {
 
@@ -81,17 +72,18 @@ public class DayNightCycle : MonoBehaviour
 
     }
 
+    // Method to control post processing effect
     private void ControlWeight()
     {
 
-        if(hours >= 20 && hours < 21)
+        if(hours >= NIGHT_INTERVAL && hours < NIGHT_INTERVAL + 1)
         {
 
             postProcVol.weight = (float)mins / 60;
 
         }
 
-        if(hours >= 6 && hours < 7)
+        if(hours >= DAY_INTERVAL && hours < DAY_INTERVAL + 1)
         {
 
             postProcVol.weight = 1 - (float)mins / 60;

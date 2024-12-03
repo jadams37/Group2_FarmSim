@@ -9,40 +9,49 @@ using UnityEngine.EventSystems;
 public class Plot : MonoBehaviour
 {
 
+    // Class containing all information related to plots and methods to
+    // be performed on said plots
+
+    // Current plot state and maximum state that can
+    // be reached
     public int curState;
     private int numStates;
 
+    // Status of whether the plot can be culitvated or not
     public bool isCultivable;
 
+    // Reference to Crop object
     public Crop crop;
 
+    // Crop GameObject to be instantiated
     public GameObject cropObject;
 
+    // SpriteRender reference to access sprite
     private SpriteRenderer sprite;
 
+    // Array of valid crop GameObjects that can be planted
     public GameObject[] cropObjects;
 
+    // Reference to PlayerUI object
     private PlayerUI playerUI;
 
+    // Reference to PlayerData object
     private PlayerData player;
 
+    // Reference to Seeds object
     private Seeds seeds;
 
+    // Array of plot sprite states
     public Sprite[] spriteStates;
 
+    // Icon to show if crop needs water
     private GameObject waterIcon;
 
+    // Status of whether the cursor is hovering over plot
     public bool isHighlighted = false;
 
-    /*public Plot(int curState, int numStates, bool isCultivable, Crop crop)
-    {
-
-        this.curState = 0;
-        this.numStates = numStates;
-        this.isCultivable = isCultivable;
-        this.crop = null;
-
-    }*/
+    // Plot related constant
+    public const int DEBRIS_CHANCE = 5;
 
     void Start()
     {
@@ -55,7 +64,6 @@ public class Plot : MonoBehaviour
         curState = SetRandomState();
 
         sprite = GetComponent<SpriteRenderer>();
-
         sprite.sprite = spriteStates[curState];
 
         player = GameObject.Find("Player").GetComponent<PlayerData>();
@@ -69,13 +77,18 @@ public class Plot : MonoBehaviour
     void Update()
     {
 
-        if(crop != null && crop.isDecaying)
-            waterIcon.SetActive(true);
+        SetWaterIcon();
+        SetCropObject();
+        
 
-        else
-            waterIcon.SetActive(false);
+    }
 
-        if(seeds.seedsOwned.Count > 0 && seeds.seedsOwned.Contains(seeds.seedEquipped))
+    // Helper method to set crop to current seed equipped
+    private void SetCropObject()
+    {
+
+        if(seeds.seedsOwned.Count > 0
+            && seeds.seedsOwned.Contains(seeds.seedEquipped))
             cropObject = cropObjects[seeds.seedEquipped];
 
         else
@@ -83,56 +96,97 @@ public class Plot : MonoBehaviour
 
     }
 
+    // Helper method to show water icon if crop is decaying
+    private void SetWaterIcon()
+    {
+
+        if (crop != null && crop.isDecaying)
+            waterIcon.SetActive(true);
+
+        else
+            waterIcon.SetActive(false);
+
+    }
+
+    // Helper method to set whether if crop has debris or not
     private int SetRandomState()
     {
 
-        int chanceOfDebris = 5;
         int state = Random.Range(0, numStates);
-        int debris = Random.Range(0, chanceOfDebris + 1);
+        int debris = Random.Range(0, DEBRIS_CHANCE + 1);
 
-        if(state <= 3 || debris < chanceOfDebris)
+        if(state <= 3 || debris < DEBRIS_CHANCE)
             state = 0;
 
         return state;
 
     }
 
+    // Method to control Left Mouse Click plot interactions
     private void OnMouseDown()
     {
 
-        if(playerUI.isInPauseMenu() || playerUI.IsInMenu() || playerUI.GetCursorOnUI())
+        if(playerUI.isInPauseMenu()
+            || playerUI.IsInMenu()
+            || playerUI.GetCursorOnUI())
             return;
 
-        if(isCultivable && curState < 3 && player.GetToolEquipped() != null && player.GetToolEquipped().toolIndex == 1)
+        if(isCultivable && curState < 3
+            && player.GetToolEquipped() != null
+            && player.GetToolEquipped().toolIndex == 1)
             player.GetToolEquipped().UseTool(transform.GetComponent<Plot>());
 
-        if(!isCultivable && player.GetToolEquipped() != null && player.GetToolEquipped().toolIndex == 1)
+        if(!isCultivable && player.GetToolEquipped() != null
+            && player.GetToolEquipped().toolIndex == 1)
             Debug.Log("Plot not unlocked.");
 
-        if(curState > 3 && player.GetToolEquipped() != null && player.GetToolEquipped().toolIndex == 1)
+        if(curState > 3 && player.GetToolEquipped() != null
+            && player.GetToolEquipped().toolIndex == 1)
+        {
+
             Debug.Log("Plot has debris");
+            return;
+
+        }
 
         if(curState == 3)
-            Debug.Log("Plot is cultivated");
+        {
 
-        if(crop != null && crop.GetHydrationLevel() < 100 && player.GetToolEquipped() != null && player.GetToolEquipped().toolIndex == 0)
+            Debug.Log("Plot is cultivated");
+            return;
+
+        }
+
+        if(crop != null && crop.GetHydrationLevel() < Crop.MAX_HYDRATION
+            && player.GetToolEquipped() != null
+            && player.GetToolEquipped().toolIndex == 0)
             player.GetToolEquipped().UseTool(transform.GetComponent<Plot>());
 
-        if(crop != null && crop.GetIsHarvestable()  && curState == 3 && !player.GetHasToolEquipped())
+        if(crop != null && crop.GetIsHarvestable()
+            && curState == 3
+            && !player.GetHasToolEquipped())
             Harvest();
 
-        if(curState > 3 && player.GetToolEquipped() != null && player.GetToolEquipped().toolIndex == 2)
+        if(curState > 3 && player.GetToolEquipped() != null
+            && player.GetToolEquipped().toolIndex == 2)
             player.GetToolEquipped().UseTool(transform.GetComponent<Plot>());
 
     }
 
+    // Method to highlight the plot if selected and plant
+    // crop on Right Mouse Button
     private void OnMouseOver()
     {
 
-        if(playerUI.isInPauseMenu() || playerUI.IsInMenu() || playerUI.GetCursorOnUI())
+        if(playerUI.isInPauseMenu()
+            || playerUI.IsInMenu()
+            || playerUI.GetCursorOnUI())
             return;
 
-        if(Input.GetMouseButtonDown(1) && curState == 3 && crop == null && cropObject != null)
+        if(Input.GetMouseButtonDown(1) 
+            && curState == 3 
+            && crop == null 
+            && cropObject != null)
         {
 
             Debug.Log("Crop planted");
@@ -156,6 +210,7 @@ public class Plot : MonoBehaviour
 
     }
 
+    // Method to remove plot highlight if not selected
     private void OnMouseExit()
     {
 
@@ -165,6 +220,7 @@ public class Plot : MonoBehaviour
 
     }
 
+    // Method to water crop if watering can used on plot
     public void Water(int waterAmount)
     {
 
@@ -172,6 +228,7 @@ public class Plot : MonoBehaviour
 
     }
 
+    // Method to harvest crop and give player money in return
     public void Harvest()
     {
 
@@ -182,6 +239,7 @@ public class Plot : MonoBehaviour
 
     }
 
+    // Method to cultivate plot
     public void Cultivate()
     {
 
@@ -190,6 +248,7 @@ public class Plot : MonoBehaviour
 
     }
 
+    // Method to clear any debris on plot
     public void ClearDebris()
     {
 
@@ -198,6 +257,7 @@ public class Plot : MonoBehaviour
 
     }
 
+    // Getters and Setters
     public int GetCurState()
     {
         return curState;

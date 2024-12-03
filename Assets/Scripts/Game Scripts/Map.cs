@@ -7,15 +7,18 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
 
+    // Map size-related variables
     private int rows = 25;
     private int cols = 50;
     private int maxRows = 50;
     private int maxCols = 100;
     private int curMapExpansion = 1;
 
+    // Arrays containing min/max bounds
     public int[] xBounds;
     public int[] yBounds;
 
+    // Plot prefab that the map consists of
     public GameObject plot;
 
     // Start is called before the first frame update
@@ -30,18 +33,11 @@ public class Map : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-
-
-    }
-
+    // Method to unlock plots after expanding
     private void UnlockPlots()
     {
 
-        for (int curPlot = 0; curPlot < transform.childCount; curPlot++)
+        for(int curPlot = 0; curPlot < transform.childCount; curPlot++)
         {
 
             GameObject plot = transform.GetChild(curPlot).gameObject;
@@ -52,17 +48,16 @@ public class Map : MonoBehaviour
 
     }
 
+    // Method to generate map at start of game
     IEnumerator GenerateMap()
     {
 
         yield return new WaitForEndOfFrame();
-
         Vector3 curPos = transform.position;
-
-        for (int row = 0; row < maxRows; row++)
+        for(int row = 0; row < maxRows; row++)
         {
 
-            for (int col = 0; col < maxCols; col++)
+            for(int col = 0; col < maxCols; col++)
             {
 
                 Instantiate(plot, curPos, transform.rotation, transform);
@@ -77,6 +72,7 @@ public class Map : MonoBehaviour
 
     }
 
+    // Method to lock plots outside of current ranch bounds
     IEnumerator LockPlots()
     {
 
@@ -86,7 +82,7 @@ public class Map : MonoBehaviour
         {
 
             GameObject plot = transform.GetChild(curPlot).gameObject;
-            if (plot.transform.position.x >= xBounds[1] || plot.transform.position.y >= yBounds[1])
+            if(plot.transform.position.x >= xBounds[1] || plot.transform.position.y >= yBounds[1])
                 plot.GetComponent<Plot>().SetIsCultivable(false);
             else
                 unlockedPlots++;
@@ -97,6 +93,7 @@ public class Map : MonoBehaviour
         
     }
 
+    // Method to get center of map to set camera position to
     public Vector2 GetCenter()
     {
 

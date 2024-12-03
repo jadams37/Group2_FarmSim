@@ -1,10 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Crop : MonoBehaviour
 {
+
+    // Class containing all information related to crops and methods to
+    // be performed on said crops
 
     // Current crop growth state and maximum state that can
     // be reached
@@ -17,6 +18,7 @@ public class Crop : MonoBehaviour
     // Current level of water crop has
     public int hydrationLevel = 50;
 
+    // Rate at which crop grows
     public int growthRate;
 
     // Item dropped from crop when harvested
@@ -31,31 +33,25 @@ public class Crop : MonoBehaviour
     // Status of whether crop can be collected or not
     private bool isHarvestable;
 
+    // SpriteRender to access crop sprite
     private SpriteRenderer spriteRenderer;
 
+    // Array of all crop state sprites
     public Sprite[] spriteStates;
 
+    // Status of whether crop is decaying or not
     public bool isDecaying = false;
 
-    // Class containing all information related to crops and methods to
-    // be performed on said crops
-
-    /*public Crop(string cropName, int numStates, int yieldCount)
-    {
-
-        this.numStates = numStates;
-
-        this.yieldCount = yieldCount;
-
-        this.cropName = cropName;
-
-    }*/
+    // Crop related constants
+    public const int MIN_HYDRATION = 25;
+    public const int MAX_HYDRATION = 100;
+    public const int GROWTH_MULT = 100;
 
     void Start()
     {
 
         numStates = spriteStates.Length;
-        isHarvestable = false;
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = spriteStates[curState];
 
@@ -71,14 +67,16 @@ public class Crop : MonoBehaviour
 
     }
 
+    // Method to set whether the crop is decaying or not
     private void CheckHydration()
     {
 
-        if(hydrationLevel > 25)
+        if(hydrationLevel > MIN_HYDRATION)
             isDecaying = false;
 
     }
     
+    // Helper method to start crop coroutines
     private void InitCrop()
     {
 
@@ -91,13 +89,13 @@ public class Crop : MonoBehaviour
     public void Water(int waterAmount)
     {
 
-        if (hydrationLevel < 100)
+        if(hydrationLevel < MAX_HYDRATION)
             hydrationLevel += waterAmount;
 
         else
         {
 
-            hydrationLevel = 100;
+            hydrationLevel = MAX_HYDRATION;
             Debug.Log("Crop does not need to be watered");
 
         }
@@ -112,7 +110,7 @@ public class Crop : MonoBehaviour
         while(!isHarvestable)
         {
 
-            yield return new WaitForSeconds(growthRate * 100);
+            yield return new WaitForSeconds(growthRate * GROWTH_MULT);
             if(!isDecaying)
             {
 
@@ -143,15 +141,11 @@ public class Crop : MonoBehaviour
         while(!isHarvestable)
         {
 
-            yield return new WaitForSeconds((growthRate * 100) / 4);
+            yield return new WaitForSeconds((growthRate * GROWTH_MULT) / 4);
             hydrationLevel = (int)(hydrationLevel * (1 - decayRate));
 
-            if(hydrationLevel < 25)
-            {
-
+            if(hydrationLevel < MIN_HYDRATION)
                 isDecaying = true;
-
-            }
 
         }
 
@@ -195,6 +189,7 @@ public class Crop : MonoBehaviour
 
     }
 
+    // Getters and Setters
     public int GetCurState()
     {
         return curState;

@@ -7,12 +7,19 @@ using UnityEngine.UI;
 public class ItemUI : MonoBehaviour
 {
 
+    // Class relating to item display functions
+
+    // Reference to Market object
     private Market market;
 
+    // Reference to item name and cost texts
     public TextMeshProUGUI itemNameText;
     public TextMeshProUGUI itemCostText;
+
+    // Reference to sprite of item
     public Image itemSprite;
 
+    // Reference to Item object
     private Item itemData;
 
     // Start is called before the first frame update
@@ -29,12 +36,7 @@ public class ItemUI : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    // Method to purchase item
     public void PurchaseItem()
     {
 

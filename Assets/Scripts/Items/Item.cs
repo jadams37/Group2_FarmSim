@@ -5,18 +5,22 @@ using UnityEngine;
 public class Item: MonoBehaviour
 {
 
+    // String variables for item's name and type
     public string itemName;
     public string itemType;
 
+    // Int variables for item's price, value, and quantity
     public int itemPrice;
     public int itemValue;
-
     public int quantity;
 
+    // Reference to sprite of item
     public Sprite itemSprite;
 
+    // Index of item
     public int itemIndex;
 
+    // Constructor that was to be used by MarketMath
     public Item(string itemName, string itemType, int itemPrice, int itemValue, int quantity)
     {
 
@@ -28,6 +32,7 @@ public class Item: MonoBehaviour
 
     }
 
+    // Getters and Setters
     public string GetItemName()
     {
         return itemName;
