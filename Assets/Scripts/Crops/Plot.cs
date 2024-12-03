@@ -136,10 +136,11 @@ public class Plot : MonoBehaviour
         {
 
             Debug.Log("Crop planted");
-            cropObject = PrefabUtility.InstantiatePrefab(cropObject) as GameObject;
-            cropObject.transform.position = transform.position;
-            cropObject.transform.rotation = transform.rotation;
-            cropObject.transform.parent = transform;
+            //cropObject = PrefabUtility.InstantiatePrefab(cropObject) as GameObject;
+            cropObject = Instantiate(cropObject, transform.position, transform.rotation, transform);
+            //cropObject.transform.position = transform.position;
+            //cropObject.transform.rotation = transform.rotation;
+            //cropObject.transform.parent = transform;
             crop = cropObject.GetComponent<Crop>();
             seeds.seedsOwned.Remove(seeds.seedEquipped);
 

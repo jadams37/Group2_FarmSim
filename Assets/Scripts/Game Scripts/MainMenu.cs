@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -75,7 +74,7 @@ public class MainMenu : MonoBehaviour
     {
 
         Application.Quit(0);
-        EditorApplication.isPlaying = false;
+        //EditorApplication.isPlaying = false;
 
     }
 
